@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visual Maths — Interactive GCSE Tools</title>
+<style>
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css');
+
+:root {
+  --brand: #4338ca;
+  --brand-light: #e8e6fc;
+  --brand-dark: #312e81;
+  --teal: #0f766e;
+  --teal-light: #d5f5f0;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --coral: #c2410c;
+  --coral-light: #fff1e6;
+  --pink: #be185d;
+  --pink-light: #fce7f3;
+  --green: #15803d;
+  --green-light: #dcfce7;
+  --surface: #fafaf9;
+  --card: #ffffff;
+  --text: #1c1917;
+  --text-secondary: #78716c;
+  --text-tertiary: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #818cf8;
+    --brand-light: #1e1b4b;
+    --brand-dark: #c7d2fe;
+    --teal: #5eead4;
+    --teal-light: #042f2e;
+    --amber: #fbbf24;
+    --amber-light: #422006;
+    --coral: #fb923c;
+    --coral-light: #431407;
+    --pink: #f472b6;
+    --pink-light: #500724;
+    --green: #4ade80;
+    --green-light: #052e16;
+    --surface: #0c0a09;
+    --card: #1c1917;
+    --text: #fafaf9;
+    --text-secondary: #a8a29e;
+    --text-tertiary: #78716c;
+    --border: #292524;
+    --border-strong: #44403c;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+}
+.nav-home svg { width: 20px; height: 20px; }
+.nav-sep { color: var(--text-tertiary); font-size: 14px; }
+.nav-title { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+
+/* TOOL PAGE LAYOUT */
+.tool-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.tool-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.tool-body {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* COMMON WIDGET STYLES */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+.num-input {
+  width: 56px; font-size: 17px; font-weight: 600; text-align: center; padding: 6px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--card); color: var(--text);
+}
+.num-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand); }
+.sym { font-size: 20px; font-weight: 600; color: var(--text-secondary); }
+select {
+  font-size: 14px; padding: 6px 10px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text);
+}
+button {
+  font-size: 13px; font-weight: 500; padding: 7px 16px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text); cursor: pointer;
+  transition: background 0.15s;
+}
+button:hover { background: var(--surface); }
+button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+button.primary:hover { opacity: 0.9; }
+
+.step-card {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 16px; margin: 8px 0;
+}
+.step-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.step-math { font-size: 16px; font-weight: 600; }
+.result-box {
+  text-align: center; font-size: 20px; font-weight: 700; padding: 14px;
+  background: var(--surface); border-radius: var(--radius-sm); margin: 12px 0;
+}
+.result-box.ok { color: var(--green); background: var(--green-light); }
+.hint { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+.bar-outer {
+  height: 38px; border-radius: 6px; overflow: hidden; display: flex;
+  border: 1px solid var(--border-strong);
+}
+.bar-seg { height: 100%; border-right: 1px solid rgba(0,0,0,0.08); }
+.bar-seg:last-child { border-right: none; }
+
+.mode-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.mode-btn { font-size: 13px; padding: 6px 14px; }
+.mode-btn.active { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
+
+/* WEIGHT BLOCKS (seesaw) */
+.wb {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 32px; padding: 0 8px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: grab; touch-action: none;
+}
+.wb:active { cursor: grabbing; }
+.w1 { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.w2 { background: var(--brand-light); color: var(--brand-dark); border: 1px solid #a5b4fc; }
+.w5 { background: var(--amber-light); color: var(--amber); border: 1px solid #fcd34d; }
+.w10 { background: var(--coral-light); color: var(--coral); border: 1px solid #fdba74; }
+.wx { background: var(--pink-light); color: var(--pink); border: 1px solid #f9a8d4; font-style: italic; }
+.wn { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* GRID TABLE */
+.g-table { border-collapse: collapse; }
+.g-table td, .g-table th { padding: 10px 16px; text-align: center; font-size: 15px; }
+.g-table th { font-weight: 600; color: var(--text-secondary); }
+
+/* CANVAS / SVG */
+canvas, svg { display: block; }
+
+/* HOMEPAGE */
+.home-hero {
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.home-hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topic-card:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+}
+.card-title { font-size: 15px; font-weight: 600; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; background: var(--surface); color: var(--text-tertiary);
+  align-self: flex-start; margin-top: auto;
+}
+
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-tertiary); padding: 0 20px; max-width: 960px; margin: 24px auto 8px;
+}
+
+</style>
+<style>
+  .home-nav { padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--card); display: flex; align-items: center; gap: 10px; }
+  .home-nav .logo { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+  .home-nav .logo span { color: var(--brand); }
+  .home-nav .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: var(--brand-light); color: var(--brand); }
+</style>
+</head>
+<body>
+<nav class="home-nav">
+  <div class="logo">Visual<span>Maths</span></div>
+  <div class="badge">GCSE</div>
+</nav>
+
+<div class="home-hero">
+  <h1>Learn maths by seeing it</h1>
+  <p>Interactive visual tools for GCSE Mathematics. No calculator needed — build intuition through exploration.</p>
+</div>
+
+<div class="section-label">Number &amp; Arithmetic</div>
+<div class="card-grid">
+  <a href="area-model.html" class="topic-card">
+    <div class="card-icon" style="background:var(--brand-light);color:var(--brand)">x</div>
+    <div class="card-title">Area model multiplier</div>
+    <div class="card-desc">Visualise multiplication as rectangles. Decompose numbers by place value and see partial products.</div>
+    <div class="card-tag">Number</div>
+  </a>
+  <a href="fractions.html" class="topic-card">
+    <div class="card-icon" style="background:var(--teal-light);color:var(--teal)">&frac12;</div>
+    <div class="card-title">Fraction explorer</div>
+    <div class="card-desc">Add, subtract, multiply and divide fractions with visual bar models and step-by-step working.</div>
+    <div class="card-tag">Number</div>
+  </a>
+  <a href="percentages.html" class="topic-card">
+    <div class="card-icon" style="background:var(--amber-light);color:var(--amber)">%</div>
+    <div class="card-title">Percentages</div>
+    <div class="card-desc">Increase, decrease and reverse percentages with visual bar representations.</div>
+    <div class="card-tag">Number</div>
+  </a>
+  <a href="ratios.html" class="topic-card">
+    <div class="card-icon" style="background:var(--coral-light);color:var(--coral)">:</div>
+    <div class="card-title">Ratio explorer</div>
+    <div class="card-desc">Simplify ratios, find equivalents, and share amounts with proportional bar models.</div>
+    <div class="card-tag">Ratio &amp; Proportion</div>
+  </a>
+</div>
+
+<div class="section-label">Algebra</div>
+<div class="card-grid">
+  <a href="seesaw-balance.html" class="topic-card">
+    <div class="card-icon" style="background:var(--brand-light);color:var(--brand)">=</div>
+    <div class="card-title">Seesaw balance</div>
+    <div class="card-desc">Drag weights onto a seesaw to understand what the equals sign really means.</div>
+    <div class="card-tag">Algebra</div>
+  </a>
+  <a href="equations.html" class="topic-card">
+    <div class="card-icon" style="background:var(--teal-light);color:var(--teal)">x</div>
+    <div class="card-title">Linear equations</div>
+    <div class="card-desc">Solve equations step-by-step with a visual balance scale. Apply operations to both sides.</div>
+    <div class="card-tag">Algebra</div>
+  </a>
+  <a href="inequality-seesaw.html" class="topic-card">
+    <div class="card-icon" style="background:var(--coral-light);color:var(--coral)">&gt;</div>
+    <div class="card-title">Inequality seesaw</div>
+    <div class="card-desc">Drag weights to explore inequalities. See why multiplying by a negative flips the sign.</div>
+    <div class="card-tag">Algebra</div>
+  </a>
+  <a href="inequalities.html" class="topic-card">
+    <div class="card-icon" style="background:var(--pink-light);color:var(--pink)">&le;</div>
+    <div class="card-title">Inequality solver</div>
+    <div class="card-desc">Solve inequalities with number line visualisation. Simple, two-step and compound.</div>
+    <div class="card-tag">Algebra</div>
+  </a>
+  <a href="expanding-brackets.html" class="topic-card">
+    <div class="card-icon" style="background:var(--amber-light);color:var(--amber)">()</div>
+    <div class="card-title">Expanding brackets</div>
+    <div class="card-desc">Single and double brackets expanded with the grid method and FOIL, step by step.</div>
+    <div class="card-tag">Algebra</div>
+  </a>
+  <a href="sequences.html" class="topic-card">
+    <div class="card-icon" style="background:var(--green-light);color:var(--green)">n</div>
+    <div class="card-title">Sequences &amp; nth term</div>
+    <div class="card-desc">Explore arithmetic and quadratic sequences. Find the nth term with visual dot patterns.</div>
+    <div class="card-tag">Algebra</div>
+  </a>
+  <a href="simultaneous.html" class="topic-card">
+    <div class="card-icon" style="background:var(--brand-light);color:var(--brand)">xy</div>
+    <div class="card-title">Simultaneous equations</div>
+    <div class="card-desc">Solve pairs of equations graphically and algebraically. See where the lines cross.</div>
+    <div class="card-tag">Algebra</div>
+  </a>
+  <a href="coordinates.html" class="topic-card">
+    <div class="card-icon" style="background:var(--teal-light);color:var(--teal)">m</div>
+    <div class="card-title">Coordinate geometry</div>
+    <div class="card-desc">Explore y = mx + c interactively. Adjust gradient and intercept with sliders.</div>
+    <div class="card-tag">Algebra</div>
+  </a>
+</div>
+
+<div class="section-label">Geometry &amp; Measures</div>
+<div class="card-grid">
+  <a href="pythagoras.html" class="topic-card">
+    <div class="card-icon" style="background:var(--coral-light);color:var(--coral)">&Delta;</div>
+    <div class="card-title">Pythagoras &amp; trigonometry</div>
+    <div class="card-desc">Interactive right-angled triangles. See Pythagoras visually and explore SOH CAH TOA.</div>
+    <div class="card-tag">Geometry</div>
+  </a>
+  <a href="circle-theorems.html" class="topic-card">
+    <div class="card-icon" style="background:var(--pink-light);color:var(--pink)">&cir;</div>
+    <div class="card-title">Circle theorems</div>
+    <div class="card-desc">Drag points around a circle and watch the theorems come alive.</div>
+    <div class="card-tag">Geometry</div>
+  </a>
+  <a href="transformations.html" class="topic-card">
+    <div class="card-icon" style="background:var(--amber-light);color:var(--amber)">&olarr;</div>
+    <div class="card-title">Transformations</div>
+    <div class="card-desc">Reflect, rotate, translate and enlarge shapes on an interactive coordinate grid.</div>
+    <div class="card-tag">Geometry</div>
+  </a>
+</div>
+
+<div class="section-label">Probability &amp; Statistics</div>
+<div class="card-grid">
+  <a href="probability.html" class="topic-card">
+    <div class="card-icon" style="background:var(--green-light);color:var(--green)">P</div>
+    <div class="card-title">Probability &amp; tree diagrams</div>
+    <div class="card-desc">Build tree diagrams, simulate experiments, and see probability converge to theory.</div>
+    <div class="card-tag">Probability</div>
+  </a>
+</div>
+
+<div style="text-align:center;padding:32px 20px;font-size:12px;color:var(--text-tertiary)">
+  Built for Haute Vall&eacute;e School &middot; GCSE Mathematics
+</div>
+</body>
+</html>

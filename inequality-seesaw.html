@@ -1,0 +1,321 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Inequality seesaw — VisualMaths</title><style>
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css');
+
+:root {
+  --brand: #4338ca;
+  --brand-light: #e8e6fc;
+  --brand-dark: #312e81;
+  --teal: #0f766e;
+  --teal-light: #d5f5f0;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --coral: #c2410c;
+  --coral-light: #fff1e6;
+  --pink: #be185d;
+  --pink-light: #fce7f3;
+  --green: #15803d;
+  --green-light: #dcfce7;
+  --surface: #fafaf9;
+  --card: #ffffff;
+  --text: #1c1917;
+  --text-secondary: #78716c;
+  --text-tertiary: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #818cf8;
+    --brand-light: #1e1b4b;
+    --brand-dark: #c7d2fe;
+    --teal: #5eead4;
+    --teal-light: #042f2e;
+    --amber: #fbbf24;
+    --amber-light: #422006;
+    --coral: #fb923c;
+    --coral-light: #431407;
+    --pink: #f472b6;
+    --pink-light: #500724;
+    --green: #4ade80;
+    --green-light: #052e16;
+    --surface: #0c0a09;
+    --card: #1c1917;
+    --text: #fafaf9;
+    --text-secondary: #a8a29e;
+    --text-tertiary: #78716c;
+    --border: #292524;
+    --border-strong: #44403c;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+}
+.nav-home svg { width: 20px; height: 20px; }
+.nav-sep { color: var(--text-tertiary); font-size: 14px; }
+.nav-title { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+
+/* TOOL PAGE LAYOUT */
+.tool-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.tool-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.tool-body {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* COMMON WIDGET STYLES */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+.num-input {
+  width: 56px; font-size: 17px; font-weight: 600; text-align: center; padding: 6px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--card); color: var(--text);
+}
+.num-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand); }
+.sym { font-size: 20px; font-weight: 600; color: var(--text-secondary); }
+select {
+  font-size: 14px; padding: 6px 10px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text);
+}
+button {
+  font-size: 13px; font-weight: 500; padding: 7px 16px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text); cursor: pointer;
+  transition: background 0.15s;
+}
+button:hover { background: var(--surface); }
+button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+button.primary:hover { opacity: 0.9; }
+
+.step-card {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 16px; margin: 8px 0;
+}
+.step-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.step-math { font-size: 16px; font-weight: 600; }
+.result-box {
+  text-align: center; font-size: 20px; font-weight: 700; padding: 14px;
+  background: var(--surface); border-radius: var(--radius-sm); margin: 12px 0;
+}
+.result-box.ok { color: var(--green); background: var(--green-light); }
+.hint { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+.bar-outer {
+  height: 38px; border-radius: 6px; overflow: hidden; display: flex;
+  border: 1px solid var(--border-strong);
+}
+.bar-seg { height: 100%; border-right: 1px solid rgba(0,0,0,0.08); }
+.bar-seg:last-child { border-right: none; }
+
+.mode-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.mode-btn { font-size: 13px; padding: 6px 14px; }
+.mode-btn.active { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
+
+/* WEIGHT BLOCKS (seesaw) */
+.wb {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 32px; padding: 0 8px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: grab; touch-action: none;
+}
+.wb:active { cursor: grabbing; }
+.w1 { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.w2 { background: var(--brand-light); color: var(--brand-dark); border: 1px solid #a5b4fc; }
+.w5 { background: var(--amber-light); color: var(--amber); border: 1px solid #fcd34d; }
+.w10 { background: var(--coral-light); color: var(--coral); border: 1px solid #fdba74; }
+.wx { background: var(--pink-light); color: var(--pink); border: 1px solid #f9a8d4; font-style: italic; }
+.wn { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* GRID TABLE */
+.g-table { border-collapse: collapse; }
+.g-table td, .g-table th { padding: 10px 16px; text-align: center; font-size: 15px; }
+.g-table th { font-weight: 600; color: var(--text-secondary); }
+
+/* CANVAS / SVG */
+canvas, svg { display: block; }
+
+/* HOMEPAGE */
+.home-hero {
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.home-hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topic-card:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+}
+.card-title { font-size: 15px; font-weight: 600; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; background: var(--surface); color: var(--text-tertiary);
+  align-self: flex-start; margin-top: auto;
+}
+
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-tertiary); padding: 0 20px; max-width: 960px; margin: 24px auto 8px;
+}
+
+</style><style>.scene{position:relative;width:100%;height:300px;overflow:visible;user-select:none;-webkit-user-select:none}.fulcrum{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:0;height:0;border-left:24px solid transparent;border-right:24px solid transparent;border-bottom:32px solid var(--border-strong)}.beam{position:absolute;left:50%;bottom:48px;width:420px;height:6px;margin-left:-210px;border-radius:3px;background:var(--text);transition:transform .5s cubic-bezier(.34,1.56,.64,1);transform-origin:center}.pan{position:absolute;bottom:0;width:150px;min-height:100px;display:flex;flex-direction:column-reverse;align-items:center;gap:3px;padding:6px 4px;transition:bottom .5s cubic-bezier(.34,1.56,.64,1)}.pan-l{left:0}.pan-r{right:0}.pan-base{width:130px;height:5px;border-radius:3px;flex-shrink:0}.pan-l .pan-base{background:#818cf8}.pan-r .pan-base{background:#5eead4}.pan.over .pan-base{outline:2px solid var(--brand);outline-offset:2px}.pan-w{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;min-height:16px}.ghost{position:fixed;pointer-events:none;z-index:9999;opacity:.85;transform:scale(1.1)}.tray{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:.75rem 0;padding:10px;background:var(--surface);border-radius:var(--radius)}.tray-lbl{font-size:11px;color:var(--text-tertiary);width:100%;text-align:center;margin-bottom:3px}.sign{position:absolute;left:50%;bottom:62px;transform:translateX(-50%);font-size:26px;font-weight:700;z-index:2;pointer-events:none}</style></head><body><nav class="site-nav"><a href="index.html" class="nav-home"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l7-7 7 7M5 8.5V16h4v-4h2v4h4V8.5"/></svg> VisualMaths</a><span class="nav-sep">/</span><span class="nav-title">Inequality seesaw</span></nav><div class="tool-page"><div class="tool-header"><h1>Inequality seesaw</h1><p>Drag weights to explore inequalities. The beam tilt shows >, < or =. See what happens when you multiply by a negative.</p></div><div class="tool-body"><div id="eqD" style="text-align:center;font-size:17px;font-weight:600;margin-bottom:6px">0 = 0</div>
+<div class="scene" id="scene">
+  <div class="beam" id="beam"></div><div class="sign" id="sgn">=</div><div class="fulcrum"></div>
+  <div class="pan pan-l" id="panL"><div style="font-size:11px;color:var(--text-tertiary)">Left</div><div id="totL" style="font-size:16px;font-weight:600">0</div><div class="pan-w" id="wL"></div><div class="pan-base"></div></div>
+  <div class="pan pan-r" id="panR"><div style="font-size:11px;color:var(--text-tertiary)">Right</div><div id="totR" style="font-size:16px;font-weight:600">0</div><div class="pan-w" id="wR"></div><div class="pan-base"></div></div>
+</div>
+<div id="ruleBox" style="text-align:center;margin:6px 0;padding:8px;border-radius:var(--radius-sm);font-size:13px;min-height:20px"></div>
+<div style="display:flex;gap:6px;align-items:center;justify-content:center;margin:6px 0">
+  <span style="font-size:12px;color:var(--text-secondary)"><em>x</em> =</span>
+  <input class="num-input" id="xVal" type="number" value="7" min="-20" max="50" style="width:48px;font-size:14px" oninput="recalc()">
+  <label style="font-size:12px;color:var(--text-secondary);cursor:pointer"><input type="checkbox" id="xH" onchange="document.getElementById('xVal').type=this.checked?'password':'number'"> hide</label>
+</div>
+<div class="tray" id="tray">
+  <div class="tray-lbl">Drag weights onto either side</div>
+  <div class="wb w1" data-v="1">1</div><div class="wb w2" data-v="2">2</div><div class="wb w5" data-v="5">5</div><div class="wb w10" data-v="10">10</div><div class="wb wx" data-v="x"><em>x</em></div><div class="wb wn" data-v="-1">-1</div><div class="wb wn" data-v="-5">-5</div>
+</div>
+<div style="background:var(--surface);border-radius:var(--radius-sm);padding:10px 14px;margin:8px 0">
+  <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px">Do the same to both sides</div>
+  <div class="row" style="gap:6px">
+    <select id="bOp" style="font-size:13px;padding:3px 6px"><option value="add">Add</option><option value="sub">Subtract</option><option value="mul">Multiply</option><option value="div">Divide</option></select>
+    <input class="num-input" id="bVal" type="number" value="2" style="width:48px;font-size:13px">
+    <button onclick="doBoth()">Apply</button>
+  </div>
+</div>
+<div class="row" style="justify-content:center;gap:6px;margin:8px 0"><button onclick="clearAll();document.getElementById('ruleBox').textContent=''">Clear</button><button onclick="challenge()">Challenge</button><button onclick="undo()">Undo</button></div>
+<div id="chalB" style="text-align:center;margin:8px 0;display:none"></div>
+<script>
+
+let L=[],R=[],gh=null,dV=null,hist=[];
+function xv(){return parseFloat(document.getElementById('xVal').value)||1}
+function wv(w){return w==='x'?xv():parseFloat(w)}
+function sm(a){return a.reduce((s,w)=>s+wv(w),0)}
+function rn(v){return Math.round(v*100)/100}
+function cts(a){const c={};a.forEach(w=>{c[w]=(c[w]||0)+1});return c}
+function expr(a){if(!a.length)return'0';const c=cts(a);let p=[];if(c['x'])p.push(c['x']===1?'x':c['x']+'x');let n=0;Object.keys(c).forEach(k=>{if(k!=='x')n+=parseFloat(k)*c[k]});n=rn(n);if(n||!p.length){if(p.length&&n>0)p.push('+ '+n);else if(p.length&&n<0)p.push('- '+Math.abs(n));else p.push(''+n)}return p.join(' ')}
+function cls(v){if(v==='x')return'wx';const n=parseFloat(v);if(n<0)return'wn';if(n<=1)return'w1';if(n<=2)return'w2';if(n<=5)return'w5';return'w10'}
+function lbl(v){return v==='x'?'<em>x</em>':v}
+function render(id,arr){const el=document.getElementById(id);el.innerHTML='';arr.forEach((w,i)=>{const b=document.createElement('div');b.className='wb '+cls(w);b.innerHTML=lbl(w);b.dataset.idx=i;b.dataset.side=id==='wL'?'L':'R';b.style.touchAction='none';b.addEventListener('pointerdown',dragPan);el.appendChild(b)})}
+function dragTray(e){e.preventDefault();dV=e.currentTarget.dataset.v;mkG(e.currentTarget,e)}
+function dragPan(e){e.preventDefault();e.stopPropagation();const s=e.currentTarget.dataset.side,i=+e.currentTarget.dataset.idx;hist.push({L:[...L],R:[...R]});if(s==='L'){dV=L[i];L.splice(i,1)}else{dV=R[i];R.splice(i,1)}recalc();mkG(e.currentTarget,e)}
+function mkG(el,e){gh=el.cloneNode(true);gh.className=el.className+' ghost';gh.style.width=el.offsetWidth+'px';gh.style.height=el.offsetHeight+'px';document.body.appendChild(gh);mvG(e);document.addEventListener('pointermove',onMv);document.addEventListener('pointerup',onUp)}
+function mvG(e){if(!gh)return;gh.style.left=(e.clientX-gh.offsetWidth/2)+'px';gh.style.top=(e.clientY-gh.offsetHeight/2)+'px'}
+function ov(e,r){return e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom}
+function onMv(e){e.preventDefault();mvG(e);const lr=document.getElementById('panL').getBoundingClientRect(),rr=document.getElementById('panR').getBoundingClientRect();document.getElementById('panL').classList.toggle('over',ov(e,lr));document.getElementById('panR').classList.toggle('over',ov(e,rr))}
+function onUp(e){document.removeEventListener('pointermove',onMv);document.removeEventListener('pointerup',onUp);document.getElementById('panL').classList.remove('over');document.getElementById('panR').classList.remove('over');if(gh){gh.remove();gh=null}const lr=document.getElementById('panL').getBoundingClientRect(),rr=document.getElementById('panR').getBoundingClientRect();if(ov(e,lr)){hist.push({L:[...L],R:[...R]});L.push(dV)}else if(ov(e,rr)){hist.push({L:[...L],R:[...R]});R.push(dV)}dV=null;recalc()}
+function clearAll(){hist.push({L:[...L],R:[...R]});L=[];R=[];recalc()}
+function undo(){if(!hist.length)return;const h=hist.pop();L=h.L;R=h.R;recalc()}
+function initTray(){document.querySelectorAll('#tray .wb').forEach(el=>{el.style.touchAction='none';el.addEventListener('pointerdown',dragTray)})}
+
+function recalc(){
+  const lv=rn(sm(L)),rv=rn(sm(R)),diff=lv-rv;
+  const ang=Math.max(-14,Math.min(14,diff*1.2));
+  document.getElementById('beam').style.transform='rotate('+ang+'deg)';
+  const drop=Math.sin(ang*Math.PI/180)*210;
+  document.getElementById('panL').style.bottom=(48-drop)+'px';
+  document.getElementById('panR').style.bottom=(48+drop)+'px';
+  document.getElementById('totL').textContent=lv;document.getElementById('totR').textContent=rv;
+  let sign='=',col='var(--green)';if(lv>rv){sign='>';col='var(--brand)'}else if(lv<rv){sign='<';col='var(--teal)'}
+  const sgn=document.getElementById('sgn');sgn.textContent=sign;sgn.style.color=col;
+  document.getElementById('eqD').textContent=expr(L)+' '+sign+' '+expr(R);
+  document.getElementById('eqD').style.color=lv===rv?'var(--green)':'';
+  render('wL',L);render('wR',R);
+}
+function doBoth(){
+  const op=document.getElementById('bOp').value,v=parseFloat(document.getElementById('bVal').value)||0;
+  if(!v)return;hist.push({L:[...L],R:[...R]});const rb=document.getElementById('ruleBox');
+  if(op==='add'){L.push(''+v);R.push(''+v);rb.textContent='Adding '+v+' to both sides preserves the inequality.';rb.style.background='var(--green-light)';rb.style.color='var(--green)'}
+  else if(op==='sub'){L.push(''+(-v));R.push(''+(-v));rb.textContent='Subtracting '+v+' from both sides preserves the inequality.';rb.style.background='var(--green-light)';rb.style.color='var(--green)'}
+  else if(op==='mul'){const nL=[],nR=[];L.forEach(w=>{nL.push(''+rn(wv(w)*v))});R.forEach(w=>{nR.push(''+rn(wv(w)*v))});L.length=0;R.length=0;nL.forEach(w=>L.push(w));nR.forEach(w=>R.push(w));
+    if(v<0){rb.textContent='Multiplying by NEGATIVE ('+v+') FLIPS the inequality!';rb.style.background='#fee2e2';rb.style.color='#991b1b'}else{rb.textContent='Multiplying by '+v+' preserves the inequality.';rb.style.background='var(--green-light)';rb.style.color='var(--green)'}}
+  else{if(!v)return;const nL=[],nR=[];L.forEach(w=>{nL.push(''+rn(wv(w)/v))});R.forEach(w=>{nR.push(''+rn(wv(w)/v))});L.length=0;R.length=0;nL.forEach(w=>L.push(w));nR.forEach(w=>R.push(w));
+    if(v<0){rb.textContent='Dividing by NEGATIVE ('+v+') FLIPS the inequality!';rb.style.background='#fee2e2';rb.style.color='#991b1b'}else{rb.textContent='Dividing by '+v+' preserves the inequality.';rb.style.background='var(--green-light)';rb.style.color='var(--green)'}}
+  recalc()}
+const CHAL=[{l:['5','2'],r:['x'],xv:3,q:'Is 7 > x when x=3?'},{l:['x','x'],r:['10'],xv:4,q:'Is 2x < 10 when x=4?'},{l:['x'],r:['x','5'],xv:3,q:'Can x ever be > x+5?'}];
+function challenge(){clearAll();document.getElementById('ruleBox').textContent='';const c=CHAL[Math.floor(Math.random()*CHAL.length)];document.getElementById('xVal').value=c.xv;L.push(...c.l);R.push(...c.r);recalc();const b=document.getElementById('chalB');b.style.display='';b.innerHTML='<div style="font-size:14px;font-weight:600">'+c.q+'</div>'}
+initTray();recalc();
+</script></div></div></body></html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Linear equations — VisualMaths</title>
+<style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css');
+
+:root {
+  --brand: #4338ca;
+  --brand-light: #e8e6fc;
+  --brand-dark: #312e81;
+  --teal: #0f766e;
+  --teal-light: #d5f5f0;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --coral: #c2410c;
+  --coral-light: #fff1e6;
+  --pink: #be185d;
+  --pink-light: #fce7f3;
+  --green: #15803d;
+  --green-light: #dcfce7;
+  --surface: #fafaf9;
+  --card: #ffffff;
+  --text: #1c1917;
+  --text-secondary: #78716c;
+  --text-tertiary: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #818cf8;
+    --brand-light: #1e1b4b;
+    --brand-dark: #c7d2fe;
+    --teal: #5eead4;
+    --teal-light: #042f2e;
+    --amber: #fbbf24;
+    --amber-light: #422006;
+    --coral: #fb923c;
+    --coral-light: #431407;
+    --pink: #f472b6;
+    --pink-light: #500724;
+    --green: #4ade80;
+    --green-light: #052e16;
+    --surface: #0c0a09;
+    --card: #1c1917;
+    --text: #fafaf9;
+    --text-secondary: #a8a29e;
+    --text-tertiary: #78716c;
+    --border: #292524;
+    --border-strong: #44403c;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+}
+.nav-home svg { width: 20px; height: 20px; }
+.nav-sep { color: var(--text-tertiary); font-size: 14px; }
+.nav-title { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+
+/* TOOL PAGE LAYOUT */
+.tool-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.tool-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.tool-body {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* COMMON WIDGET STYLES */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+.num-input {
+  width: 56px; font-size: 17px; font-weight: 600; text-align: center; padding: 6px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--card); color: var(--text);
+}
+.num-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand); }
+.sym { font-size: 20px; font-weight: 600; color: var(--text-secondary); }
+select {
+  font-size: 14px; padding: 6px 10px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text);
+}
+button {
+  font-size: 13px; font-weight: 500; padding: 7px 16px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text); cursor: pointer;
+  transition: background 0.15s;
+}
+button:hover { background: var(--surface); }
+button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+button.primary:hover { opacity: 0.9; }
+
+.step-card {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 16px; margin: 8px 0;
+}
+.step-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.step-math { font-size: 16px; font-weight: 600; }
+.result-box {
+  text-align: center; font-size: 20px; font-weight: 700; padding: 14px;
+  background: var(--surface); border-radius: var(--radius-sm); margin: 12px 0;
+}
+.result-box.ok { color: var(--green); background: var(--green-light); }
+.hint { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+.bar-outer {
+  height: 38px; border-radius: 6px; overflow: hidden; display: flex;
+  border: 1px solid var(--border-strong);
+}
+.bar-seg { height: 100%; border-right: 1px solid rgba(0,0,0,0.08); }
+.bar-seg:last-child { border-right: none; }
+
+.mode-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.mode-btn { font-size: 13px; padding: 6px 14px; }
+.mode-btn.active { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
+
+/* WEIGHT BLOCKS (seesaw) */
+.wb {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 32px; padding: 0 8px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: grab; touch-action: none;
+}
+.wb:active { cursor: grabbing; }
+.w1 { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.w2 { background: var(--brand-light); color: var(--brand-dark); border: 1px solid #a5b4fc; }
+.w5 { background: var(--amber-light); color: var(--amber); border: 1px solid #fcd34d; }
+.w10 { background: var(--coral-light); color: var(--coral); border: 1px solid #fdba74; }
+.wx { background: var(--pink-light); color: var(--pink); border: 1px solid #f9a8d4; font-style: italic; }
+.wn { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* GRID TABLE */
+.g-table { border-collapse: collapse; }
+.g-table td, .g-table th { padding: 10px 16px; text-align: center; font-size: 15px; }
+.g-table th { font-weight: 600; color: var(--text-secondary); }
+
+/* CANVAS / SVG */
+canvas, svg { display: block; }
+
+/* HOMEPAGE */
+.home-hero {
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.home-hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topic-card:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+}
+.card-title { font-size: 15px; font-weight: 600; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; background: var(--surface); color: var(--text-tertiary);
+  align-self: flex-start; margin-top: auto;
+}
+
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-tertiary); padding: 0 20px; max-width: 960px; margin: 24px auto 8px;
+}
+</style>
+<style>
+.eq-display{text-align:center;font-size:32px;font-weight:800;letter-spacing:-0.5px;padding:16px;background:var(--surface);border-radius:var(--radius);margin:12px 0}
+.preset-grid{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 16px}
+.preset-btn{padding:10px 16px;border-radius:20px;border:2px solid var(--border);background:var(--card);color:var(--text);font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.preset-btn:hover,.preset-btn.active{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+.scale-wrap{position:relative;width:100%;padding:20px 0 10px;margin:8px 0}
+.scale-svg{width:100%;display:block}
+.term-block{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:44px;padding:0 10px;border-radius:10px;font-size:18px;font-weight:700}
+.term-x{background:var(--brand-light);color:var(--brand-dark);border:2px solid var(--brand)}
+.term-pos{background:#dbeafe;color:#1e40af;border:2px solid #93c5fd}
+.term-neg{background:#fee2e2;color:#991b1b;border:2px solid #fca5a5}
+.btn-row{display:flex;gap:10px;justify-content:center;margin:16px 0;flex-wrap:wrap}
+.btn-big{font-size:16px;font-weight:700;padding:12px 28px;border-radius:var(--radius);cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--brand);color:#fff;border:2px solid var(--brand)}
+.btn-primary:hover{opacity:.9}
+.btn-outline{background:var(--card);color:var(--text);border:2px solid var(--border)}
+.btn-outline:hover{border-color:var(--brand);background:var(--brand-light)}
+.btn-amber{background:var(--amber-light);color:var(--amber);border:2px solid #fcd34d}
+.hint-box{text-align:center;padding:12px 16px;background:var(--brand-light);border-radius:var(--radius-sm);margin:8px 0;font-size:15px;font-weight:600;color:var(--brand);display:none}
+.history-step{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);margin:4px 0;background:var(--surface)}
+.history-num{width:30px;height:30px;border-radius:50%;background:var(--brand-light);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.history-eq{font-size:17px;font-weight:700;flex:1}
+.history-action{font-size:12px;color:var(--text-secondary);text-align:right}
+.result-banner{text-align:center;padding:24px;border-radius:var(--radius);margin:16px 0}
+.result-banner.solved{background:var(--green-light);color:var(--green)}
+.result-value{font-size:40px;font-weight:800}
+.result-label{font-size:14px;font-weight:500;opacity:.8}
+.custom-panel{padding:14px;background:var(--surface);border-radius:var(--radius);margin:12px 0}
+.custom-title{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;cursor:pointer}
+.step-explain{text-align:center;font-size:16px;font-weight:600;color:var(--text-secondary);padding:8px;margin:4px 0;min-height:30px}
+</style></head><body>
+<nav class="site-nav"><a href="index.html" class="nav-home"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l7-7 7 7M5 8.5V16h4v-4h2v4h4V8.5"/></svg> VisualMaths</a><span class="nav-sep">/</span><span class="nav-title">Linear equations</span></nav>
+<div class="tool-page"><div class="tool-header"><h1>Linear equations</h1><p>Solve equations step-by-step. Whatever you do to one side, you must do to the other — the balance stays level!</p></div>
+<div class="tool-body">
+
+<div class="preset-grid" id="presets"></div>
+<div class="eq-display" id="eqDisplay"></div>
+
+<div class="scale-wrap">
+  <svg id="scaleSvg" class="scale-svg" viewBox="0 0 700 260"></svg>
+</div>
+
+<div class="step-explain" id="stepExplain"></div>
+
+<div class="btn-row">
+  <button class="btn-big btn-primary" onclick="nextStep()">&#9654; Next step</button>
+  <button class="btn-big btn-outline" onclick="showHint()">Hint</button>
+  <button class="btn-big btn-amber" onclick="solveAll()">Solve all</button>
+</div>
+
+<div class="hint-box" id="hintBox"></div>
+
+<details style="margin:12px 0">
+  <summary style="font-size:14px;font-weight:700;cursor:pointer;color:var(--text-secondary)">&#9654; Try it myself...</summary>
+  <div class="custom-panel" style="margin-top:8px">
+    <div class="row" style="gap:6px;flex-wrap:wrap">
+      <input class="num-input" id="ea" type="number" value="2" style="width:48px"><span style="font-style:italic;font-weight:700;font-size:18px">x</span><span class="sym">+</span>
+      <input class="num-input" id="eb" type="number" value="3" style="width:48px"><span class="sym">=</span>
+      <input class="num-input" id="ec" type="number" value="0" style="width:48px"><span style="font-style:italic;font-weight:700;font-size:18px">x</span><span class="sym">+</span>
+      <input class="num-input" id="ed" type="number" value="11" style="width:48px">
+      <button class="primary" onclick="loadFromInputs()" style="padding:8px 16px;font-weight:700">Go</button>
+    </div>
+  </div>
+</details>
+
+<div id="history"></div>
+<div id="resultBanner"></div>
+
+<div style="display:flex;gap:8px;justify-content:center;margin:8px 0">
+  <button onclick="undo()">&#8617; Undo</button>
+  <button onclick="resetEq()">Reset</button>
+</div>
+
+</div></div>
+<script>
+const dark=matchMedia('(prefers-color-scheme:dark)').matches;
+const COL={brand:dark?'#818cf8':'#4338ca',brandL:dark?'rgba(99,102,241,.15)':'#e8e6fc',brandD:dark?'#c7d2fe':'#312e81',
+teal:dark?'#5eead4':'#0f766e',tealL:dark?'rgba(94,234,212,.12)':'#d5f5f0',
+pos:dark?'rgba(55,138,221,.18)':'#dbeafe',posC:dark?'#93c5fd':'#1e40af',posS:dark?'rgba(55,138,221,.4)':'#93c5fd',
+neg:dark?'rgba(226,75,74,.18)':'#fee2e2',negC:dark?'#fca5a5':'#991b1b',negS:dark?'rgba(226,75,74,.4)':'#fca5a5',
+txt:dark?'#fafaf9':'#1c1917',txtM:dark?'#a8a29e':'#78716c',border:dark?'#44403c':'#d6d3d1',
+green:dark?'#4ade80':'#15803d',card:dark?'#1c1917':'#fff',surface:dark?'#0c0a09':'#fafaf9'};
+
+const PRESETS=[
+  {a:2,b:3,c:0,d:11,label:'2x + 3 = 11'},
+  {a:5,b:-2,c:0,d:13,label:'5x \u2212 2 = 13'},
+  {a:3,b:5,c:2,d:14,label:'3x + 5 = 2x + 14'},
+  {a:4,b:-1,c:2,d:7,label:'4x \u2212 1 = 2x + 7'},
+  {a:6,b:0,c:0,d:24,label:'6x = 24'},
+  {a:10,b:0,c:1,d:4,label:'10 \u2212 x = 4'},
+];
+
+let S,origS,hist,solved,activePreset=0;
+
+function rn(v){return Math.round(v*1e4)/1e4}
+function sStr(xc,cc){let p=[];if(xc){if(xc===1)p.push('x');else if(xc===-1)p.push('\u2212x');else p.push(xc+'x')}if(cc||!p.length){if(p.length&&cc>0)p.push('+ '+cc);else if(p.length&&cc<0)p.push('\u2212 '+Math.abs(cc));else p.push(''+cc)}return p.join(' ')}
+function eqStr(s){return sStr(s.lx,s.lc)+' = '+sStr(s.rx,s.rc)}
+
+function buildPresets(){
+  let h='';PRESETS.forEach((p,i)=>{h+='<button class="preset-btn'+(i===activePreset?' active':'')+'" onclick="loadPreset('+i+')">'+p.label+'</button>'});
+  document.getElementById('presets').innerHTML=h;
+}
+
+function drawScale(){
+  const s=S,svg=document.getElementById('scaleSvg');
+  const W=700,H=260,cx=350,baseY=240,beamY=180,beamW=520;
+  const lx=cx-beamW/2,rx=cx+beamW/2;
+  // pans hang at same height - ALWAYS LEVEL
+  const panY=beamY+16,panW=180,panH=80;
+
+  let o='';
+  // fulcrum
+  o+='<rect x="'+(cx-25)+'" y="'+(baseY-4)+'" width="50" height="8" rx="4" fill="'+COL.border+'" opacity=".5"/>';
+  o+='<polygon points="'+(cx-18)+','+(baseY-4)+' '+(cx+18)+','+(baseY-4)+' '+cx+','+beamY+'" fill="'+COL.border+'" opacity=".35"/>';
+  // beam - ALWAYS LEVEL
+  o+='<line x1="'+lx+'" y1="'+beamY+'" x2="'+rx+'" y2="'+beamY+'" stroke="'+COL.txt+'" stroke-width="6" stroke-linecap="round"/>';
+  o+='<circle cx="'+cx+'" cy="'+beamY+'" r="5" fill="'+COL.txt+'"/>';
+  // equals sign
+  o+='<rect x="'+(cx-12)+'" y="'+(beamY-28)+'" width="24" height="4" rx="2" fill="'+COL.green+'"/>';
+  o+='<rect x="'+(cx-12)+'" y="'+(beamY-20)+'" width="24" height="4" rx="2" fill="'+COL.green+'"/>';
+  // strings
+  o+='<line x1="'+(lx+panW/2+10)+'" y1="'+beamY+'" x2="'+(lx+panW/2+10)+'" y2="'+panY+'" stroke="'+COL.txt+'" stroke-width="1.5"/>';
+  o+='<line x1="'+(rx-panW/2-10)+'" y1="'+beamY+'" x2="'+(rx-panW/2-10)+'" y2="'+panY+'" stroke="'+COL.txt+'" stroke-width="1.5"/>';
+  // pan plates
+  o+='<rect x="'+(lx+10)+'" y="'+panY+'" width="'+panW+'" height="5" rx="2.5" fill="'+COL.brand+'"/>';
+  o+='<rect x="'+(rx-panW-10)+'" y="'+panY+'" width="'+panW+'" height="5" rx="2.5" fill="'+COL.teal+'"/>';
+
+  // blocks on LEFT
+  let bx=lx+14,by=panY-6;
+  const lBlocks=[];
+  for(let i=0;i<Math.abs(s.lx);i++)lBlocks.push({type:'x',neg:s.lx<0});
+  if(s.lc>0)for(let i=0;i<Math.min(s.lc,8);i++)lBlocks.push({type:'num',val:s.lc>8&&i===7?s.lc:1,neg:false});
+  if(s.lc<0)for(let i=0;i<Math.min(Math.abs(s.lc),8);i++)lBlocks.push({type:'num',val:Math.abs(s.lc)>8&&i===7?s.lc:s.lc,neg:true});
+
+  lBlocks.forEach((b,i)=>{
+    const bw=40,bh=36,gap=4;
+    const col=b.type==='x'?{f:COL.brandL,s:COL.brand,t:COL.brandD}:b.neg?{f:COL.neg,s:COL.negS,t:COL.negC}:{f:COL.pos,s:COL.posS,t:COL.posC};
+    const x2=bx+i*(bw+gap);if(x2+bw>lx+panW+10)return;
+    o+='<rect x="'+x2+'" y="'+(by-bh)+'" width="'+bw+'" height="'+bh+'" rx="6" fill="'+col.f+'" stroke="'+col.s+'" stroke-width="2"/>';
+    const label=b.type==='x'?(b.neg?'\u2212x':'x'):(typeof b.val==='number'&&Math.abs(b.val)>1?b.val:''+b.val);
+    o+='<text x="'+(x2+bw/2)+'" y="'+(by-bh/2+1)+'" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="'+col.t+'" font-family="system-ui">'+(b.type==='x'?'x':label)+'</text>';
+  });
+  // left label
+  o+='<text x="'+(lx+panW/2+10)+'" y="'+(panY+22)+'" text-anchor="middle" font-size="18" font-weight="700" fill="'+COL.brand+'" font-family="system-ui">'+sStr(s.lx,s.lc)+'</text>';
+  o+='<text x="'+(lx+panW/2+10)+'" y="'+(panY+38)+'" text-anchor="middle" font-size="11" font-weight="600" fill="'+COL.txtM+'" font-family="system-ui" text-transform="uppercase" letter-spacing="1">LEFT SIDE</text>';
+
+  // blocks on RIGHT
+  bx=rx-panW-6;
+  const rBlocks=[];
+  for(let i=0;i<Math.abs(s.rx);i++)rBlocks.push({type:'x',neg:s.rx<0});
+  if(s.rc>0)for(let i=0;i<Math.min(s.rc,8);i++)rBlocks.push({type:'num',val:s.rc>8&&i===7?s.rc:1,neg:false});
+  if(s.rc<0)for(let i=0;i<Math.min(Math.abs(s.rc),8);i++)rBlocks.push({type:'num',val:Math.abs(s.rc)>8&&i===7?s.rc:s.rc,neg:true});
+
+  rBlocks.forEach((b,i)=>{
+    const bw=40,bh=36,gap=4;
+    const col=b.type==='x'?{f:COL.brandL,s:COL.brand,t:COL.brandD}:b.neg?{f:COL.neg,s:COL.negS,t:COL.negC}:{f:COL.pos,s:COL.posS,t:COL.posC};
+    const x2=bx+i*(bw+gap);if(x2+bw>rx-6)return;
+    o+='<rect x="'+x2+'" y="'+(by-bh)+'" width="'+bw+'" height="'+bh+'" rx="6" fill="'+col.f+'" stroke="'+col.s+'" stroke-width="2"/>';
+    const label=b.type==='x'?(b.neg?'\u2212x':'x'):(typeof b.val==='number'&&Math.abs(b.val)>1?b.val:''+b.val);
+    o+='<text x="'+(x2+bw/2)+'" y="'+(by-bh/2+1)+'" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="'+col.t+'" font-family="system-ui">'+(b.type==='x'?'x':label)+'</text>';
+  });
+  // right label
+  o+='<text x="'+(rx-panW/2-10)+'" y="'+(panY+22)+'" text-anchor="middle" font-size="18" font-weight="700" fill="'+COL.teal+'" font-family="system-ui">'+sStr(s.rx,s.rc)+'</text>';
+  o+='<text x="'+(rx-panW/2-10)+'" y="'+(panY+38)+'" text-anchor="middle" font-size="11" font-weight="600" fill="'+COL.txtM+'" font-family="system-ui" text-transform="uppercase" letter-spacing="1">RIGHT SIDE</text>';
+
+  svg.innerHTML=o;
+}
+
+function getNextAction(){
+  const s=S;
+  if(s.lx!==0&&s.rx!==0){
+    const sub=Math.min(s.lx,s.rx);
+    if(sub>0)return{desc:'Subtract '+sub+'x from both sides',hint:'There\u2019s x on both sides \u2014 collect x terms by subtracting the smaller one.',fn:()=>{S.lx=rn(S.lx-sub);S.rx=rn(S.rx-sub)}};
+    else{const add=Math.max(Math.abs(s.lx),Math.abs(s.rx));return{desc:'Add '+add+'x to both sides',hint:'Collect x terms on one side.',fn:()=>{S.lx=rn(S.lx+add);S.rx=rn(S.rx+add)}}}
+  }
+  if(s.lx===0&&s.rx!==0)return{desc:'Swap sides',hint:'Put x on the left side.',fn:()=>{[S.lx,S.lc,S.rx,S.rc]=[S.rx,S.rc,S.lx,S.lc]}};
+  if(s.lx!==0&&s.lc!==0){
+    const c=s.lc;return{desc:(c>0?'Subtract '+c:'Add '+Math.abs(c))+' '+(c>0?'from':'to')+' both sides',hint:'Move the number away from x \u2014 '+(c>0?'subtract':'add')+' it from both sides.',fn:()=>{S.lc=0;S.rc=rn(S.rc-c)}};
+  }
+  if(s.lx!==0&&s.lx!==1&&s.lc===0)return{desc:'Divide both sides by '+s.lx,hint:'The last step! Divide by the number in front of x.',fn:()=>{S.rc=rn(S.rc/S.lx);S.lx=1}};
+  return null;
+}
+
+function nextStep(){
+  if(solved)return;
+  const act=getNextAction();if(!act)return;
+  hist.push({...S});
+  act.fn();
+  document.getElementById('stepExplain').textContent=act.desc;
+  document.getElementById('hintBox').style.display='none';
+  render();
+}
+function showHint(){
+  const act=getNextAction();if(!act)return;
+  const hb=document.getElementById('hintBox');
+  hb.textContent=act.hint;hb.style.display='block';
+}
+function solveAll(){
+  while(!solved){const act=getNextAction();if(!act)break;hist.push({...S});act.fn();checkSolved();}render();
+}
+
+function checkSolved(){
+  const s=S;
+  if((s.lx===1&&s.rx===0&&s.lc===0)||(s.rx===1&&s.lx===0&&s.rc===0)){solved=true;return true}
+  return false;
+}
+
+function render(){
+  const s=S;
+  document.getElementById('eqDisplay').textContent=eqStr(s);
+  drawScale();
+  
+  if(checkSolved()){
+    const val=s.lx===1?s.rc:s.lc;
+    document.getElementById('resultBanner').innerHTML='<div class="result-banner solved"><div class="result-label">Solution found!</div><div class="result-value">x = '+rn(val)+'</div></div>';
+    document.getElementById('stepExplain').textContent='Done! x equals '+rn(val);
+  } else {
+    document.getElementById('resultBanner').innerHTML='';
+  }
+  renderHistory();
+}
+
+function renderHistory(){
+  let h='';
+  const all=[...hist.map(s=>({...s}))];
+  all.push({...S});
+  all.forEach((s,i)=>{
+    h+='<div class="history-step"><div class="history-num">'+(i+1)+'</div><div class="history-eq">'+eqStr(s)+'</div><div class="history-action">'+(i===0?'Start':'Step '+i)+'</div></div>';
+  });
+  document.getElementById('history').innerHTML=h;
+}
+
+function undo(){if(hist.length<1)return;S=hist.pop();solved=false;document.getElementById('resultBanner').innerHTML='';document.getElementById('stepExplain').textContent='';document.getElementById('hintBox').style.display='none';render()}
+function resetEq(){S={...origS};hist=[];solved=false;document.getElementById('resultBanner').innerHTML='';document.getElementById('stepExplain').textContent='';document.getElementById('hintBox').style.display='none';render()}
+
+function loadPreset(i){
+  activePreset=i;const p=PRESETS[i];
+  S={lx:p.a,lc:p.b,rx:p.c,rc:p.d};origS={...S};hist=[];solved=false;
+  document.getElementById('ea').value=p.a;document.getElementById('eb').value=p.b;
+  document.getElementById('ec').value=p.c;document.getElementById('ed').value=p.d;
+  document.getElementById('resultBanner').innerHTML='';document.getElementById('stepExplain').textContent='';document.getElementById('hintBox').style.display='none';
+  buildPresets();render();
+}
+function loadFromInputs(){
+  const a=parseFloat(document.getElementById('ea').value)||0,b=parseFloat(document.getElementById('eb').value)||0;
+  const c=parseFloat(document.getElementById('ec').value)||0,d=parseFloat(document.getElementById('ed').value)||0;
+  activePreset=-1;S={lx:a,lc:b,rx:c,rc:d};origS={...S};hist=[];solved=false;
+  document.getElementById('resultBanner').innerHTML='';document.getElementById('stepExplain').textContent='';document.getElementById('hintBox').style.display='none';
+  buildPresets();render();
+}
+
+buildPresets();loadPreset(0);
+</script></body></html>

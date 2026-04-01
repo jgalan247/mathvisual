@@ -1,0 +1,311 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Transformations — VisualMaths</title><style>
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css');
+
+:root {
+  --brand: #4338ca;
+  --brand-light: #e8e6fc;
+  --brand-dark: #312e81;
+  --teal: #0f766e;
+  --teal-light: #d5f5f0;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --coral: #c2410c;
+  --coral-light: #fff1e6;
+  --pink: #be185d;
+  --pink-light: #fce7f3;
+  --green: #15803d;
+  --green-light: #dcfce7;
+  --surface: #fafaf9;
+  --card: #ffffff;
+  --text: #1c1917;
+  --text-secondary: #78716c;
+  --text-tertiary: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #818cf8;
+    --brand-light: #1e1b4b;
+    --brand-dark: #c7d2fe;
+    --teal: #5eead4;
+    --teal-light: #042f2e;
+    --amber: #fbbf24;
+    --amber-light: #422006;
+    --coral: #fb923c;
+    --coral-light: #431407;
+    --pink: #f472b6;
+    --pink-light: #500724;
+    --green: #4ade80;
+    --green-light: #052e16;
+    --surface: #0c0a09;
+    --card: #1c1917;
+    --text: #fafaf9;
+    --text-secondary: #a8a29e;
+    --text-tertiary: #78716c;
+    --border: #292524;
+    --border-strong: #44403c;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+}
+.nav-home svg { width: 20px; height: 20px; }
+.nav-sep { color: var(--text-tertiary); font-size: 14px; }
+.nav-title { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+
+/* TOOL PAGE LAYOUT */
+.tool-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.tool-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.tool-body {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* COMMON WIDGET STYLES */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+.num-input {
+  width: 56px; font-size: 17px; font-weight: 600; text-align: center; padding: 6px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--card); color: var(--text);
+}
+.num-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand); }
+.sym { font-size: 20px; font-weight: 600; color: var(--text-secondary); }
+select {
+  font-size: 14px; padding: 6px 10px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text);
+}
+button {
+  font-size: 13px; font-weight: 500; padding: 7px 16px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text); cursor: pointer;
+  transition: background 0.15s;
+}
+button:hover { background: var(--surface); }
+button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+button.primary:hover { opacity: 0.9; }
+
+.step-card {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 16px; margin: 8px 0;
+}
+.step-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.step-math { font-size: 16px; font-weight: 600; }
+.result-box {
+  text-align: center; font-size: 20px; font-weight: 700; padding: 14px;
+  background: var(--surface); border-radius: var(--radius-sm); margin: 12px 0;
+}
+.result-box.ok { color: var(--green); background: var(--green-light); }
+.hint { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+.bar-outer {
+  height: 38px; border-radius: 6px; overflow: hidden; display: flex;
+  border: 1px solid var(--border-strong);
+}
+.bar-seg { height: 100%; border-right: 1px solid rgba(0,0,0,0.08); }
+.bar-seg:last-child { border-right: none; }
+
+.mode-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.mode-btn { font-size: 13px; padding: 6px 14px; }
+.mode-btn.active { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
+
+/* WEIGHT BLOCKS (seesaw) */
+.wb {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 32px; padding: 0 8px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: grab; touch-action: none;
+}
+.wb:active { cursor: grabbing; }
+.w1 { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.w2 { background: var(--brand-light); color: var(--brand-dark); border: 1px solid #a5b4fc; }
+.w5 { background: var(--amber-light); color: var(--amber); border: 1px solid #fcd34d; }
+.w10 { background: var(--coral-light); color: var(--coral); border: 1px solid #fdba74; }
+.wx { background: var(--pink-light); color: var(--pink); border: 1px solid #f9a8d4; font-style: italic; }
+.wn { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* GRID TABLE */
+.g-table { border-collapse: collapse; }
+.g-table td, .g-table th { padding: 10px 16px; text-align: center; font-size: 15px; }
+.g-table th { font-weight: 600; color: var(--text-secondary); }
+
+/* CANVAS / SVG */
+canvas, svg { display: block; }
+
+/* HOMEPAGE */
+.home-hero {
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.home-hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topic-card:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+}
+.card-title { font-size: 15px; font-weight: 600; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; background: var(--surface); color: var(--text-tertiary);
+  align-self: flex-start; margin-top: auto;
+}
+
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-tertiary); padding: 0 20px; max-width: 960px; margin: 24px auto 8px;
+}
+
+</style></head><body><nav class="site-nav"><a href="index.html" class="nav-home"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l7-7 7 7M5 8.5V16h4v-4h2v4h4V8.5"/></svg> VisualMaths</a><span class="nav-sep">/</span><span class="nav-title">Transformations</span></nav><div class="tool-page"><div class="tool-header"><h1>Transformations</h1><p>Reflect, rotate, translate and enlarge shapes on an interactive grid. See the image update live as you change parameters.</p></div><div class="tool-body"><div class="mode-row" style="flex-wrap:wrap">
+<button class="mode-btn active" data-m="t" onclick="setM('t')">Translate</button>
+<button class="mode-btn" data-m="r" onclick="setM('r')">Reflect</button>
+<button class="mode-btn" data-m="o" onclick="setM('o')">Rotate</button>
+<button class="mode-btn" data-m="e" onclick="setM('e')">Enlarge</button>
+</div>
+<div id="tP"><div class="row" style="margin-bottom:10px"><span style="font-size:13px;color:var(--text-secondary)">Vector:</span><input class="num-input" id="tx" type="number" value="4" oninput="draw()"><input class="num-input" id="ty" type="number" value="-2" oninput="draw()"></div></div>
+<div id="rP" style="display:none"><div class="row" style="margin-bottom:10px"><span style="font-size:13px;color:var(--text-secondary)">Mirror line:</span><select id="ml" onchange="draw()" style="font-size:13px;padding:4px"><option value="x">x-axis</option><option value="y" selected>y-axis</option><option value="yx">y = x</option><option value="ynx">y = -x</option></select></div></div>
+<div id="oP" style="display:none"><div class="row" style="margin-bottom:10px"><span style="font-size:13px;color:var(--text-secondary)">Angle:</span><select id="ra" onchange="draw()" style="font-size:13px;padding:4px"><option value="90">90° clockwise</option><option value="180">180°</option><option value="270">90° anticlockwise</option></select><span style="font-size:13px;color:var(--text-secondary);margin-left:6px">Centre:</span><input class="num-input" id="rcx" type="number" value="0" style="width:40px" oninput="draw()"><input class="num-input" id="rcy" type="number" value="0" style="width:40px" oninput="draw()"></div></div>
+<div id="eP" style="display:none"><div class="row" style="margin-bottom:10px"><span style="font-size:13px;color:var(--text-secondary)">Scale factor:</span><input class="num-input" id="sf" type="number" value="2" step="0.5" min="-3" max="3" oninput="draw()"><span style="font-size:13px;color:var(--text-secondary);margin-left:6px">Centre:</span><input class="num-input" id="ecx" type="number" value="0" style="width:40px" oninput="draw()"><input class="num-input" id="ecy" type="number" value="0" style="width:40px" oninput="draw()"></div></div>
+<canvas id="cv" width="500" height="440" style="width:100%;border:1px solid var(--border);border-radius:var(--radius-sm)"></canvas>
+<div id="info" class="step-card" style="margin-top:8px"></div>
+<script>
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const dark=matchMedia('(prefers-color-scheme:dark)').matches;
+let mode='t';
+const BG=dark?'#1c1917':'#fff',GRID=dark?'#292524':'#f1f0ea',AXIS=dark?'#78716c':'#a8a29e',COL=dark?'#818cf8':'#4338ca',COL2=dark?'#5eead4':'#0f766e',MIRROR='#dc2626',TXT=dark?'#fafaf9':'#1c1917',TXTM=dark?'#a8a29e':'#78716c';
+const SHAPE=[[1,1],[1,4],[3,4],[3,2],[2,2],[2,1]];
+function setM(m){mode=m;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.m===m));
+['tP','rP','oP','eP'].forEach(id=>document.getElementById(id).style.display='none');
+document.getElementById(m==='t'?'tP':m==='r'?'rP':m==='o'?'oP':'eP').style.display='';draw()}
+function draw(){
+  const W=500,H=440,ox=W/2,oy=H/2,sc=25;
+  ctx.fillStyle=BG;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle=GRID;ctx.lineWidth=.5;
+  for(let i=-10;i<=10;i++){ctx.beginPath();ctx.moveTo(ox+i*sc,0);ctx.lineTo(ox+i*sc,H);ctx.stroke();ctx.beginPath();ctx.moveTo(0,oy+i*sc);ctx.lineTo(W,oy+i*sc);ctx.stroke()}
+  ctx.strokeStyle=AXIS;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+  ctx.fillStyle=TXTM;ctx.font='10px var(--font)';ctx.textAlign='center';
+  for(let i=-9;i<=9;i++){if(!i)continue;ctx.fillText(i,ox+i*sc,oy+12)}
+  ctx.textAlign='right';for(let i=-8;i<=8;i++){if(!i)continue;ctx.fillText(-i,ox-4,oy+i*sc+3)}
+  function drawShape(pts,col,fill){ctx.beginPath();pts.forEach((p,i)=>{const x=ox+p[0]*sc,y=oy-p[1]*sc;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
+    pts.forEach(p=>{ctx.beginPath();ctx.arc(ox+p[0]*sc,oy-p[1]*sc,3,0,Math.PI*2);ctx.fillStyle=col;ctx.fill()})}
+  drawShape(SHAPE,COL,COL+'22');
+  let img=[],info='';
+  if(mode==='t'){
+    const dx=parseFloat(document.getElementById('tx').value)||0,dy=parseFloat(document.getElementById('ty').value)||0;
+    img=SHAPE.map(p=>[p[0]+dx,p[1]+dy]);info='Translate by vector ('+dx+', '+dy+')';
+    ctx.setLineDash([4,4]);ctx.strokeStyle=TXTM;ctx.lineWidth=.5;SHAPE.forEach((p,i)=>{ctx.beginPath();ctx.moveTo(ox+p[0]*sc,oy-p[1]*sc);ctx.lineTo(ox+img[i][0]*sc,oy-img[i][1]*sc);ctx.stroke()});ctx.setLineDash([]);
+  } else if(mode==='r'){
+    const ml=document.getElementById('ml').value;
+    if(ml==='x'){img=SHAPE.map(p=>[p[0],-p[1]]);ctx.strokeStyle=MIRROR;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();info='Reflect in x-axis: (x,y) → (x,-y)'}
+    else if(ml==='y'){img=SHAPE.map(p=>[-p[0],p[1]]);ctx.strokeStyle=MIRROR;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();info='Reflect in y-axis: (x,y) → (-x,y)'}
+    else if(ml==='yx'){img=SHAPE.map(p=>[p[1],p[0]]);ctx.strokeStyle=MIRROR;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(ox-10*sc,oy+10*sc);ctx.lineTo(ox+10*sc,oy-10*sc);ctx.stroke();info='Reflect in y=x: (x,y) → (y,x)'}
+    else{img=SHAPE.map(p=>[-p[1],-p[0]]);ctx.strokeStyle=MIRROR;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(ox-10*sc,oy-10*sc);ctx.lineTo(ox+10*sc,oy+10*sc);ctx.stroke();info='Reflect in y=-x: (x,y) → (-y,-x)'}
+  } else if(mode==='o'){
+    const ang=parseInt(document.getElementById('ra').value)||90;
+    const cx=parseFloat(document.getElementById('rcx').value)||0,cy=parseFloat(document.getElementById('rcy').value)||0;
+    const r=-ang*Math.PI/180;
+    img=SHAPE.map(p=>{const dx=p[0]-cx,dy=p[1]-cy;return[Math.round((cx+dx*Math.cos(r)-dy*Math.sin(r))*100)/100,Math.round((cy+dx*Math.sin(r)+dy*Math.cos(r))*100)/100]});
+    ctx.beginPath();ctx.arc(ox+cx*sc,oy-cy*sc,5,0,Math.PI*2);ctx.fillStyle=MIRROR;ctx.fill();
+    info='Rotate '+ang+'° clockwise about ('+cx+', '+cy+')';
+  } else {
+    const sf=parseFloat(document.getElementById('sf').value)||1;
+    const cx=parseFloat(document.getElementById('ecx').value)||0,cy=parseFloat(document.getElementById('ecy').value)||0;
+    img=SHAPE.map(p=>[Math.round((cx+sf*(p[0]-cx))*100)/100,Math.round((cy+sf*(p[1]-cy))*100)/100]);
+    ctx.beginPath();ctx.arc(ox+cx*sc,oy-cy*sc,5,0,Math.PI*2);ctx.fillStyle=MIRROR;ctx.fill();
+    ctx.setLineDash([3,3]);ctx.strokeStyle=TXTM;ctx.lineWidth=.5;
+    img.forEach((p,i)=>{ctx.beginPath();ctx.moveTo(ox+cx*sc,oy-cy*sc);ctx.lineTo(ox+p[0]*sc,oy-p[1]*sc);ctx.stroke()});ctx.setLineDash([]);
+    info='Enlarge by scale factor '+sf+' from ('+cx+', '+cy+')';
+  }
+  drawShape(img,COL2,COL2+'22');
+  ctx.fillStyle=COL;ctx.font='12px var(--font)';ctx.fillText('Original',ox+SHAPE[2][0]*sc+8,oy-SHAPE[2][1]*sc);
+  ctx.fillStyle=COL2;ctx.fillText('Image',ox+img[2][0]*sc+8,oy-img[2][1]*sc);
+  document.getElementById('info').innerHTML='<div class="step-math">'+info+'</div>';
+}
+draw();
+</script></div></div></body></html>

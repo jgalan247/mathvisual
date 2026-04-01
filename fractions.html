@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Fraction explorer — VisualMaths</title><style>
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css');
+
+:root {
+  --brand: #4338ca;
+  --brand-light: #e8e6fc;
+  --brand-dark: #312e81;
+  --teal: #0f766e;
+  --teal-light: #d5f5f0;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --coral: #c2410c;
+  --coral-light: #fff1e6;
+  --pink: #be185d;
+  --pink-light: #fce7f3;
+  --green: #15803d;
+  --green-light: #dcfce7;
+  --surface: #fafaf9;
+  --card: #ffffff;
+  --text: #1c1917;
+  --text-secondary: #78716c;
+  --text-tertiary: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #818cf8;
+    --brand-light: #1e1b4b;
+    --brand-dark: #c7d2fe;
+    --teal: #5eead4;
+    --teal-light: #042f2e;
+    --amber: #fbbf24;
+    --amber-light: #422006;
+    --coral: #fb923c;
+    --coral-light: #431407;
+    --pink: #f472b6;
+    --pink-light: #500724;
+    --green: #4ade80;
+    --green-light: #052e16;
+    --surface: #0c0a09;
+    --card: #1c1917;
+    --text: #fafaf9;
+    --text-secondary: #a8a29e;
+    --text-tertiary: #78716c;
+    --border: #292524;
+    --border-strong: #44403c;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+}
+.nav-home svg { width: 20px; height: 20px; }
+.nav-sep { color: var(--text-tertiary); font-size: 14px; }
+.nav-title { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+
+/* TOOL PAGE LAYOUT */
+.tool-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.tool-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.tool-body {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* COMMON WIDGET STYLES */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+.num-input {
+  width: 56px; font-size: 17px; font-weight: 600; text-align: center; padding: 6px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--card); color: var(--text);
+}
+.num-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand); }
+.sym { font-size: 20px; font-weight: 600; color: var(--text-secondary); }
+select {
+  font-size: 14px; padding: 6px 10px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text);
+}
+button {
+  font-size: 13px; font-weight: 500; padding: 7px 16px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text); cursor: pointer;
+  transition: background 0.15s;
+}
+button:hover { background: var(--surface); }
+button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+button.primary:hover { opacity: 0.9; }
+
+.step-card {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 16px; margin: 8px 0;
+}
+.step-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.step-math { font-size: 16px; font-weight: 600; }
+.result-box {
+  text-align: center; font-size: 20px; font-weight: 700; padding: 14px;
+  background: var(--surface); border-radius: var(--radius-sm); margin: 12px 0;
+}
+.result-box.ok { color: var(--green); background: var(--green-light); }
+.hint { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+.bar-outer {
+  height: 38px; border-radius: 6px; overflow: hidden; display: flex;
+  border: 1px solid var(--border-strong);
+}
+.bar-seg { height: 100%; border-right: 1px solid rgba(0,0,0,0.08); }
+.bar-seg:last-child { border-right: none; }
+
+.mode-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.mode-btn { font-size: 13px; padding: 6px 14px; }
+.mode-btn.active { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
+
+/* WEIGHT BLOCKS (seesaw) */
+.wb {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 32px; padding: 0 8px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: grab; touch-action: none;
+}
+.wb:active { cursor: grabbing; }
+.w1 { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.w2 { background: var(--brand-light); color: var(--brand-dark); border: 1px solid #a5b4fc; }
+.w5 { background: var(--amber-light); color: var(--amber); border: 1px solid #fcd34d; }
+.w10 { background: var(--coral-light); color: var(--coral); border: 1px solid #fdba74; }
+.wx { background: var(--pink-light); color: var(--pink); border: 1px solid #f9a8d4; font-style: italic; }
+.wn { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* GRID TABLE */
+.g-table { border-collapse: collapse; }
+.g-table td, .g-table th { padding: 10px 16px; text-align: center; font-size: 15px; }
+.g-table th { font-weight: 600; color: var(--text-secondary); }
+
+/* CANVAS / SVG */
+canvas, svg { display: block; }
+
+/* HOMEPAGE */
+.home-hero {
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.home-hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topic-card:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+}
+.card-title { font-size: 15px; font-weight: 600; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; background: var(--surface); color: var(--text-tertiary);
+  align-self: flex-start; margin-top: auto;
+}
+
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-tertiary); padding: 0 20px; max-width: 960px; margin: 24px auto 8px;
+}
+
+</style>
+</head><body>
+<nav class="site-nav"><a href="index.html" class="nav-home"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l7-7 7 7M5 8.5V16h4v-4h2v4h4V8.5"/></svg> VisualMaths</a><span class="nav-sep">/</span><span class="nav-title">Fraction explorer</span></nav>
+<div class="tool-page"><div class="tool-header"><h1>Fraction explorer</h1><p>Add, subtract, multiply and divide fractions with visual bar models. See the common denominator step and simplification.</p></div><div class="tool-body">
+<div id="wall" style="margin-bottom:14px"></div>
+<div class="row" style="margin-bottom:14px">
+  <div class="col" style="align-items:center"><input class="num-input" id="n1" type="number" value="2" min="0" max="20" oninput="upd()"><div style="width:52px;height:2px;background:var(--text)"></div><input class="num-input" id="d1" type="number" value="3" min="1" max="20" oninput="upd()"></div>
+  <button class="mode-btn active" data-o="+" onclick="setOp('+')">+</button>
+  <button class="mode-btn" data-o="-" onclick="setOp('-')">-</button>
+  <button class="mode-btn" data-o="x" onclick="setOp('x')">×</button>
+  <button class="mode-btn" data-o="/" onclick="setOp('/')">÷</button>
+  <div class="col" style="align-items:center"><input class="num-input" id="n2" type="number" value="1" min="0" max="20" oninput="upd()"><div style="width:52px;height:2px;background:var(--text)"></div><input class="num-input" id="d2" type="number" value="4" min="1" max="20" oninput="upd()"></div>
+</div>
+<div id="visA"></div><div id="visB"></div><div id="steps"></div>
+<script>
+let op='+';
+const WC=['#818cf8','#5eead4','#4ade80','#a3e635','#fbbf24','#fb923c','#f472b6','#f87171','#a8a29e','#c084fc','#7dd3fc','#86efac'];
+const WBG=['#e8e6fc','#d5f5f0','#dcfce7','#ecfccb','#fef3c7','#fff1e6','#fce7f3','#fee2e2','#f1f0ea','#ede9fe','#e0f2fe','#d1fae5'];
+function buildWall(){const w=document.getElementById('wall');let h='';for(let d=1;d<=12;d++){h+='<div style="display:flex;height:24px;margin-bottom:2px;border-radius:3px;overflow:hidden;cursor:pointer" onclick="document.getElementById(\'d2\').value='+d+';document.getElementById(\'n2\').value=1;upd()">';for(let i=0;i<d;i++){const f=i===0?WC[d-1]:WBG[d-1];const c=i===0?'#fff':WC[d-1];h+='<div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:'+(d>8?9:10)+'px;font-weight:600;background:'+f+';color:'+c+';border-right:0.5px solid rgba(255,255,255,.5)">'+(d<=10?'1/'+d:(i===0?'1/'+d:''))+'</div>'}h+='</div>'}w.innerHTML=h}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b]}return a}
+function lcm(a,b){return Math.abs(a*b)/gcd(a,b)}
+function simplify(n,d){if(d===0)return[n,d];if(n===0)return[0,1];const g=gcd(n,d);let sn=n/g,sd=d/g;if(sd<0){sn=-sn;sd=-sd}return[sn,sd]}
+function fracStr(n,d){if(d===1)return''+n;return n+'/'+d}
+function makeBar(num,den,shade,light,label){const c=Math.min(Math.abs(num),den*3);const s=Math.max(den,c);let h='<div style="font-size:13px;color:var(--text-secondary);margin:4px 0 2px">'+label+'</div><div class="bar-outer">';for(let i=0;i<s;i++){const f=i<Math.abs(num)?shade:light;h+='<div class="bar-seg" style="width:'+(100/s)+'%;background:'+f+'"></div>'}return h+'</div>'}
+function setOp(o){op=o;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.o===o));upd()}
+function upd(){
+  const n1=parseInt(document.getElementById('n1').value)||0,d1=parseInt(document.getElementById('d1').value)||1;
+  const n2=parseInt(document.getElementById('n2').value)||0,d2=parseInt(document.getElementById('d2').value)||1;
+  if(!d1||!d2)return;
+  document.getElementById('visA').innerHTML=makeBar(n1,d1,'#818cf8','#e8e6fc',fracStr(n1,d1));
+  document.getElementById('visB').innerHTML=makeBar(n2,d2,'#5eead4','#d5f5f0',fracStr(n2,d2));
+  let html='';
+  if(op==='+'||op==='-'){
+    const cd=lcm(d1,d2),m1=cd/d1,m2=cd/d2,nn1=n1*m1,nn2=n2*m2;
+    const rN=op==='+'?nn1+nn2:nn1-nn2;const[sn,sd]=simplify(rN,cd);
+    if(d1!==d2){html+='<div class="step-card"><div class="step-label">Common denominator (LCM of '+d1+' and '+d2+' = '+cd+')</div><div class="step-math">'+fracStr(n1,d1)+' = '+fracStr(nn1,cd)+'</div>'+makeBar(nn1,cd,'#818cf8','#e8e6fc',fracStr(nn1,cd))+'<div style="height:6px"></div><div class="step-math">'+fracStr(n2,d2)+' = '+fracStr(nn2,cd)+'</div>'+makeBar(nn2,cd,'#5eead4','#d5f5f0',fracStr(nn2,cd))+'</div>'}
+    html+='<div class="step-card"><div class="step-label">'+(op==='+'?'Add':'Subtract')+' numerators</div><div class="step-math">'+fracStr(nn1,cd)+' '+(op==='+'?'+':'-')+' '+fracStr(nn2,cd)+' = '+fracStr(rN,cd)+'</div>'+makeBar(Math.max(rN,0),cd,'#fbbf24','#fef3c7',fracStr(rN,cd))+'</div>';
+    if(sn!==rN||sd!==cd){html+='<div class="step-card"><div class="step-label">Simplify (÷'+gcd(Math.abs(rN),cd)+')</div><div class="step-math">'+fracStr(rN,cd)+' = '+fracStr(sn,sd)+'</div></div>'}
+    html+='<div class="result-box ok">'+fracStr(n1,d1)+' '+(op==='+'?'+':'−')+' '+fracStr(n2,d2)+' = '+fracStr(sn,sd)+'</div>';
+  } else if(op==='x'){
+    const rN=n1*n2,rD=d1*d2;const[sn,sd]=simplify(rN,rD);
+    html+='<div class="step-card"><div class="step-label">Multiply numerators and denominators</div><div class="step-math">'+n1+' × '+n2+' = '+rN+' &nbsp; '+d1+' × '+d2+' = '+rD+'</div>'+makeBar(Math.abs(rN),rD,'#fbbf24','#fef3c7',fracStr(rN,rD))+'</div>';
+    if(sn!==rN||sd!==rD)html+='<div class="step-card"><div class="step-label">Simplify</div><div class="step-math">'+fracStr(rN,rD)+' = '+fracStr(sn,sd)+'</div></div>';
+    html+='<div class="result-box ok">'+fracStr(n1,d1)+' × '+fracStr(n2,d2)+' = '+fracStr(sn,sd)+'</div>';
+  } else {
+    if(n2===0){html='<div class="step-card"><div class="step-label">Cannot divide by zero</div></div>';document.getElementById('steps').innerHTML=html;return}
+    const rN=n1*d2,rD=d1*n2;const[sn,sd]=simplify(rN,rD);
+    html+='<div class="step-card"><div class="step-label">Keep, Flip, Change (KFC)</div><div class="step-math">'+fracStr(n1,d1)+' ÷ '+fracStr(n2,d2)+' = '+fracStr(n1,d1)+' × '+fracStr(d2,n2)+'</div></div>';
+    html+='<div class="step-card"><div class="step-label">Multiply across</div><div class="step-math">'+fracStr(rN,rD)+'</div>'+makeBar(Math.abs(rN),Math.abs(rD),'#fbbf24','#fef3c7',fracStr(rN,rD))+'</div>';
+    if(sn!==rN||sd!==rD)html+='<div class="step-card"><div class="step-label">Simplify</div><div class="step-math">'+fracStr(rN,rD)+' = '+fracStr(sn,sd)+'</div></div>';
+    html+='<div class="result-box ok">'+fracStr(n1,d1)+' ÷ '+fracStr(n2,d2)+' = '+fracStr(sn,sd)+'</div>';
+  }
+  document.getElementById('steps').innerHTML=html;
+}
+buildWall();upd();
+</script>
+</div></div></body></html>

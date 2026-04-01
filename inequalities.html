@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Solving inequalities — VisualMaths</title>
+<style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css');
+
+:root {
+  --brand: #4338ca;
+  --brand-light: #e8e6fc;
+  --brand-dark: #312e81;
+  --teal: #0f766e;
+  --teal-light: #d5f5f0;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --coral: #c2410c;
+  --coral-light: #fff1e6;
+  --pink: #be185d;
+  --pink-light: #fce7f3;
+  --green: #15803d;
+  --green-light: #dcfce7;
+  --surface: #fafaf9;
+  --card: #ffffff;
+  --text: #1c1917;
+  --text-secondary: #78716c;
+  --text-tertiary: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #818cf8;
+    --brand-light: #1e1b4b;
+    --brand-dark: #c7d2fe;
+    --teal: #5eead4;
+    --teal-light: #042f2e;
+    --amber: #fbbf24;
+    --amber-light: #422006;
+    --coral: #fb923c;
+    --coral-light: #431407;
+    --pink: #f472b6;
+    --pink-light: #500724;
+    --green: #4ade80;
+    --green-light: #052e16;
+    --surface: #0c0a09;
+    --card: #1c1917;
+    --text: #fafaf9;
+    --text-secondary: #a8a29e;
+    --text-tertiary: #78716c;
+    --border: #292524;
+    --border-strong: #44403c;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+}
+.nav-home svg { width: 20px; height: 20px; }
+.nav-sep { color: var(--text-tertiary); font-size: 14px; }
+.nav-title { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+
+/* TOOL PAGE LAYOUT */
+.tool-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.tool-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.tool-body {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* COMMON WIDGET STYLES */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+.num-input {
+  width: 56px; font-size: 17px; font-weight: 600; text-align: center; padding: 6px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--card); color: var(--text);
+}
+.num-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand); }
+.sym { font-size: 20px; font-weight: 600; color: var(--text-secondary); }
+select {
+  font-size: 14px; padding: 6px 10px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text);
+}
+button {
+  font-size: 13px; font-weight: 500; padding: 7px 16px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text); cursor: pointer;
+  transition: background 0.15s;
+}
+button:hover { background: var(--surface); }
+button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+button.primary:hover { opacity: 0.9; }
+
+.step-card {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 16px; margin: 8px 0;
+}
+.step-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.step-math { font-size: 16px; font-weight: 600; }
+.result-box {
+  text-align: center; font-size: 20px; font-weight: 700; padding: 14px;
+  background: var(--surface); border-radius: var(--radius-sm); margin: 12px 0;
+}
+.result-box.ok { color: var(--green); background: var(--green-light); }
+.hint { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+.bar-outer {
+  height: 38px; border-radius: 6px; overflow: hidden; display: flex;
+  border: 1px solid var(--border-strong);
+}
+.bar-seg { height: 100%; border-right: 1px solid rgba(0,0,0,0.08); }
+.bar-seg:last-child { border-right: none; }
+
+.mode-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.mode-btn { font-size: 13px; padding: 6px 14px; }
+.mode-btn.active { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
+
+/* WEIGHT BLOCKS (seesaw) */
+.wb {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 32px; padding: 0 8px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: grab; touch-action: none;
+}
+.wb:active { cursor: grabbing; }
+.w1 { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.w2 { background: var(--brand-light); color: var(--brand-dark); border: 1px solid #a5b4fc; }
+.w5 { background: var(--amber-light); color: var(--amber); border: 1px solid #fcd34d; }
+.w10 { background: var(--coral-light); color: var(--coral); border: 1px solid #fdba74; }
+.wx { background: var(--pink-light); color: var(--pink); border: 1px solid #f9a8d4; font-style: italic; }
+.wn { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* GRID TABLE */
+.g-table { border-collapse: collapse; }
+.g-table td, .g-table th { padding: 10px 16px; text-align: center; font-size: 15px; }
+.g-table th { font-weight: 600; color: var(--text-secondary); }
+
+/* CANVAS / SVG */
+canvas, svg { display: block; }
+
+/* HOMEPAGE */
+.home-hero {
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.home-hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topic-card:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+}
+.card-title { font-size: 15px; font-weight: 600; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; background: var(--surface); color: var(--text-tertiary);
+  align-self: flex-start; margin-top: auto;
+}
+
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-tertiary); padding: 0 20px; max-width: 960px; margin: 24px auto 8px;
+}
+</style>
+<style>
+.eq-big{font-size:26px;font-weight:700;text-align:center;margin:8px 0;padding:14px;border-radius:var(--radius);min-height:52px;transition:background .3s;letter-spacing:1px}
+.eq-big.ok{background:var(--green-light);color:var(--green)}
+.eq-big.wk{background:var(--surface);color:var(--text)}
+.gbtn{font-size:14px;font-weight:600;padding:10px 20px;border-radius:var(--radius-sm);cursor:pointer;transition:transform .1s}
+.gbtn:active{transform:scale(.97)}
+.gbtn.gp{background:var(--brand);color:#fff;border-color:var(--brand)}
+.gbtn.gw{background:var(--amber-light);color:var(--amber);border-color:var(--amber)}
+.grow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.ppill{font-size:13px;padding:6px 14px;border-radius:20px;cursor:pointer;font-weight:600}
+.ppill.ac{background:var(--brand-light);color:var(--brand);border-color:var(--brand)}
+.hcard{background:var(--surface);border-radius:var(--radius);padding:14px 16px;margin:10px 0;border-left:4px solid var(--amber)}
+.hcard .ht{font-size:13px;font-weight:600;color:var(--amber);margin-bottom:6px}
+.hcard .hb{font-size:16px;font-weight:600;line-height:1.5}
+.tstep{display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:var(--radius-sm);margin:3px 0;background:var(--surface)}
+.tnum{width:22px;height:22px;border-radius:50%;background:var(--brand-light);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.teq{font-size:15px;font-weight:600;flex:1}
+.tact{font-size:11px;color:var(--text-secondary)}
+.flip-warn{background:#fee2e2;color:#991b1b;border-radius:var(--radius-sm);padding:10px 14px;margin:8px 0;font-size:14px;font-weight:600;text-align:center}
+</style>
+</head><body>
+<nav class="site-nav"><a href="index.html" class="nav-home"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l7-7 7 7M5 8.5V16h4v-4h2v4h4V8.5"/></svg> VisualMaths</a><span class="nav-sep">/</span><span class="nav-title">Solving inequalities</span></nav>
+<div class="tool-page"><div class="tool-header"><h1>Solving inequalities</h1><p>Solve step-by-step and see the answer on a number line. Watch out — dividing by a negative flips the sign!</p></div>
+<div class="tool-body">
+<div class="grow" id="pre"></div>
+<div class="eq-big wk" id="eqD"></div>
+<svg id="nl" width="100%" viewBox="0 0 600 80" style="margin:8px 0"></svg>
+<div id="hbox" class="hcard" style="display:none"><div class="ht">&#9733; Hint</div><div class="hb" id="htxt"></div></div>
+<div class="grow">
+  <button class="gbtn gp" onclick="autoN()">&#9654; Next step</button>
+  <button class="gbtn" onclick="showH()">Hint</button>
+  <button class="gbtn gw" onclick="solveAll()">Solve all</button>
+</div>
+<div id="trail" style="margin:10px 0"></div>
+<div id="resB"></div>
+<div id="flipW"></div>
+<div class="grow" style="margin-top:14px"><button class="gbtn" onclick="rstEq()">Reset</button><button class="gbtn" onclick="undoS()">Undo</button></div>
+<script>
+let S={a:2,b:3,op:'lt',c:11},H=[],done=false;
+const PR=[
+  {l:'2x + 3 < 11',a:2,b:3,op:'lt',c:11},
+  {l:'3x − 1 > 8',a:3,b:-1,op:'gt',c:8},
+  {l:'5x + 2 ≤ 17',a:5,b:2,op:'le',c:17},
+  {l:'4x − 6 ≥ 10',a:4,b:-6,op:'ge',c:10},
+  {l:'-2x + 4 > 10',a:-2,b:4,op:'gt',c:10},
+  {l:'x + 7 < 3',a:1,b:7,op:'lt',c:3},
+];
+function initP(){document.getElementById('pre').innerHTML=PR.map((p,i)=>'<button class="ppill'+(i===0?' ac':'')+'" onclick="ldP('+i+')">'+p.l+'</button>').join('')}
+function ldP(i){const p=PR[i];S={a:p.a,b:p.b,op:p.op,c:p.c};done=false;H=[{s:{...S},a:'Start'}];document.querySelectorAll('.ppill').forEach((b,j)=>b.classList.toggle('ac',j===i));document.getElementById('hbox').style.display='none';document.getElementById('resB').innerHTML='';document.getElementById('flipW').innerHTML='';ren()}
+function rn(v){return Math.round(v*1e4)/1e4}
+function opS(o){return{lt:'<',le:'\u2264',gt:'>',ge:'\u2265'}[o]}
+function isS(o){return o==='lt'||o==='gt'}
+function eqS(s){const bs=s.b>=0?'+ '+s.b:'\u2212 '+Math.abs(s.b);return s.a+'x '+bs+' '+opS(s.op)+' '+s.c}
+function resS(val,op){return 'x '+opS(op)+' '+val}
+function drawNL(val,op){
+  const svg=document.getElementById('nl'),pad=50,w=600,y=32,th=7;
+  const mn=Math.floor(val-4),mx=Math.ceil(val+4),sp=mx-mn||1;
+  const x=v=>pad+(v-mn)/sp*(w-2*pad);
+  let o='<line x1="'+pad+'" y1="'+y+'" x2="'+(w-pad)+'" y2="'+y+'" stroke="var(--border-strong)" stroke-width="1.5"/>';
+  o+='<polygon points="'+(w-pad+6)+','+y+' '+(w-pad-2)+','+(y-4)+' '+(w-pad-2)+','+(y+4)+'" fill="var(--border-strong)"/>';
+  for(let t=mn;t<=mx;t++){const tx=x(t);o+='<line x1="'+tx+'" y1="'+(y-th/2)+'" x2="'+tx+'" y2="'+(y+th/2)+'" stroke="var(--border-strong)" stroke-width=".75"/>';o+='<text x="'+tx+'" y="'+(y+20)+'" text-anchor="middle" font-size="12" font-weight="500" fill="var(--text-secondary)" font-family="var(--font)">'+t+'</text>'}
+  const shade='rgba(67,56,202,.2)';
+  if(op==='lt'||op==='le')o+='<rect x="'+pad+'" y="'+(y-10)+'" width="'+(x(val)-pad)+'" height="20" fill="'+shade+'" rx="4"/>';
+  else o+='<rect x="'+x(val)+'" y="'+(y-10)+'" width="'+(w-pad-x(val))+'" height="20" fill="'+shade+'" rx="4"/>';
+  const cx=x(val);o+='<circle cx="'+cx+'" cy="'+y+'" r="6" fill="'+(isS(op)?'var(--card)':'var(--brand)')+'" stroke="var(--brand)" stroke-width="2"/>';
+  o+='<text x="'+cx+'" y="'+(y-14)+'" text-anchor="middle" font-size="13" font-weight="700" fill="var(--brand)" font-family="var(--font)">'+rn(val)+'</text>';
+  svg.innerHTML=o}
+function ren(){
+  document.getElementById('eqD').textContent=eqS(S);
+  document.getElementById('eqD').className='eq-big '+(done?'ok':'wk');
+  let th='';H.forEach((h,i)=>{th+='<div class="tstep"><div class="tnum">'+(i+1)+'</div><div class="teq">'+eqS(h.s)+'</div><div class="tact">'+h.a+'</div></div>'});
+  document.getElementById('trail').innerHTML=th;
+  if(!done){svg_clear()}chk()}
+function svg_clear(){document.getElementById('nl').innerHTML=''}
+function aH(a){H.push({s:{...S},a})}
+function chk(){done=false;document.getElementById('resB').innerHTML=''}
+function nxt(){
+  const s=S;
+  if(s.b!==0){if(s.b>0)return{d:'Subtract '+s.b+' from both sides',f:()=>{s.c=rn(s.c-s.b);s.b=0}};return{d:'Add '+Math.abs(s.b)+' to both sides',f:()=>{s.c=rn(s.c-s.b);s.b=0}}}
+  if(s.a!==1&&s.a!==0){
+    const neg=s.a<0;
+    return{d:(neg?'Divide by '+s.a+' (NEGATIVE \u2014 flip the sign!)':'Divide both sides by '+s.a),f:()=>{
+      s.c=rn(s.c/s.a);
+      if(neg){s.op=s.op==='lt'?'gt':s.op==='le'?'ge':s.op==='gt'?'lt':'le'}
+      s.a=1}}}
+  return null}
+function autoN(){if(done)return;const st=nxt();if(!st)return;
+  const wasNeg=S.a<0&&S.b===0;
+  st.f();aH(st.d);
+  if(wasNeg)document.getElementById('flipW').innerHTML='<div class="flip-warn">&#9888; Dividing by a negative FLIPS the inequality sign!</div>';
+  else document.getElementById('flipW').innerHTML='';
+  if(!nxt()){done=true;document.getElementById('resB').innerHTML='<div class="eq-big ok">'+resS(S.c,S.op)+'</div>';drawNL(S.c,S.op)}
+  ren()}
+function solveAll(){if(done)return;let i=0;while(i<10){const st=nxt();if(!st)break;const wasNeg=S.a<0&&S.b===0;st.f();aH(st.d);if(wasNeg)document.getElementById('flipW').innerHTML='<div class="flip-warn">&#9888; Dividing by a negative FLIPS the inequality sign!</div>';i++}
+  done=true;document.getElementById('resB').innerHTML='<div class="eq-big ok">'+resS(S.c,S.op)+'</div>';drawNL(S.c,S.op);ren()}
+function showH(){
+  const st=nxt(),bx=document.getElementById('hbox'),tx=document.getElementById('htxt');
+  if(!st){bx.style.display='none';return}bx.style.display='';
+  if(S.b!==0)tx.innerHTML='There\'s a <strong>number added to the x term</strong>. '+(S.b>0?'Subtract':'Add')+' <strong>'+Math.abs(S.b)+'</strong> from both sides.';
+  else if(S.a!==1)tx.innerHTML=S.a<0?'The x has a <strong>negative coefficient</strong>. When you divide by a negative, the inequality sign <strong>FLIPS</strong>!':'Divide both sides by <strong>'+S.a+'</strong> to get x on its own.';
+  else tx.innerHTML='Solved!'}
+function rstEq(){const ai=[...document.querySelectorAll('.ppill')].findIndex(b=>b.classList.contains('ac'));ldP(ai>=0?ai:0)}
+function undoS(){if(H.length<=1){rstEq();return}H.pop();S={...H[H.length-1].s};done=false;document.getElementById('resB').innerHTML='';document.getElementById('hbox').style.display='none';document.getElementById('flipW').innerHTML='';ren()}
+initP();ldP(0);
+</script>
+</div></div></body></html>

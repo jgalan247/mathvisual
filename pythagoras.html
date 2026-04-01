@@ -1,0 +1,301 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Pythagoras & trigonometry — VisualMaths</title><style>
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css');
+
+:root {
+  --brand: #4338ca;
+  --brand-light: #e8e6fc;
+  --brand-dark: #312e81;
+  --teal: #0f766e;
+  --teal-light: #d5f5f0;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --coral: #c2410c;
+  --coral-light: #fff1e6;
+  --pink: #be185d;
+  --pink-light: #fce7f3;
+  --green: #15803d;
+  --green-light: #dcfce7;
+  --surface: #fafaf9;
+  --card: #ffffff;
+  --text: #1c1917;
+  --text-secondary: #78716c;
+  --text-tertiary: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #818cf8;
+    --brand-light: #1e1b4b;
+    --brand-dark: #c7d2fe;
+    --teal: #5eead4;
+    --teal-light: #042f2e;
+    --amber: #fbbf24;
+    --amber-light: #422006;
+    --coral: #fb923c;
+    --coral-light: #431407;
+    --pink: #f472b6;
+    --pink-light: #500724;
+    --green: #4ade80;
+    --green-light: #052e16;
+    --surface: #0c0a09;
+    --card: #1c1917;
+    --text: #fafaf9;
+    --text-secondary: #a8a29e;
+    --text-tertiary: #78716c;
+    --border: #292524;
+    --border-strong: #44403c;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+}
+.nav-home svg { width: 20px; height: 20px; }
+.nav-sep { color: var(--text-tertiary); font-size: 14px; }
+.nav-title { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+
+/* TOOL PAGE LAYOUT */
+.tool-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.tool-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.tool-body {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* COMMON WIDGET STYLES */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+.num-input {
+  width: 56px; font-size: 17px; font-weight: 600; text-align: center; padding: 6px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--card); color: var(--text);
+}
+.num-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand); }
+.sym { font-size: 20px; font-weight: 600; color: var(--text-secondary); }
+select {
+  font-size: 14px; padding: 6px 10px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text);
+}
+button {
+  font-size: 13px; font-weight: 500; padding: 7px 16px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text); cursor: pointer;
+  transition: background 0.15s;
+}
+button:hover { background: var(--surface); }
+button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+button.primary:hover { opacity: 0.9; }
+
+.step-card {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 16px; margin: 8px 0;
+}
+.step-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.step-math { font-size: 16px; font-weight: 600; }
+.result-box {
+  text-align: center; font-size: 20px; font-weight: 700; padding: 14px;
+  background: var(--surface); border-radius: var(--radius-sm); margin: 12px 0;
+}
+.result-box.ok { color: var(--green); background: var(--green-light); }
+.hint { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+.bar-outer {
+  height: 38px; border-radius: 6px; overflow: hidden; display: flex;
+  border: 1px solid var(--border-strong);
+}
+.bar-seg { height: 100%; border-right: 1px solid rgba(0,0,0,0.08); }
+.bar-seg:last-child { border-right: none; }
+
+.mode-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.mode-btn { font-size: 13px; padding: 6px 14px; }
+.mode-btn.active { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
+
+/* WEIGHT BLOCKS (seesaw) */
+.wb {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 32px; padding: 0 8px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: grab; touch-action: none;
+}
+.wb:active { cursor: grabbing; }
+.w1 { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.w2 { background: var(--brand-light); color: var(--brand-dark); border: 1px solid #a5b4fc; }
+.w5 { background: var(--amber-light); color: var(--amber); border: 1px solid #fcd34d; }
+.w10 { background: var(--coral-light); color: var(--coral); border: 1px solid #fdba74; }
+.wx { background: var(--pink-light); color: var(--pink); border: 1px solid #f9a8d4; font-style: italic; }
+.wn { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* GRID TABLE */
+.g-table { border-collapse: collapse; }
+.g-table td, .g-table th { padding: 10px 16px; text-align: center; font-size: 15px; }
+.g-table th { font-weight: 600; color: var(--text-secondary); }
+
+/* CANVAS / SVG */
+canvas, svg { display: block; }
+
+/* HOMEPAGE */
+.home-hero {
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.home-hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topic-card:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+}
+.card-title { font-size: 15px; font-weight: 600; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; background: var(--surface); color: var(--text-tertiary);
+  align-self: flex-start; margin-top: auto;
+}
+
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-tertiary); padding: 0 20px; max-width: 960px; margin: 24px auto 8px;
+}
+
+</style></head><body><nav class="site-nav"><a href="index.html" class="nav-home"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l7-7 7 7M5 8.5V16h4v-4h2v4h4V8.5"/></svg> VisualMaths</a><span class="nav-sep">/</span><span class="nav-title">Pythagoras & trigonometry</span></nav><div class="tool-page"><div class="tool-header"><h1>Pythagoras & trigonometry</h1><p>Interactive right-angled triangle. Adjust sides to see Pythagoras' theorem in action, and explore SOH CAH TOA with live angle calculations.</p></div><div class="tool-body"><div class="mode-row"><button class="mode-btn active" data-m="p" onclick="setM('p')">Pythagoras</button><button class="mode-btn" data-m="t" onclick="setM('t')">Trigonometry</button></div>
+<div id="pp">
+<div class="row" style="margin-bottom:10px"><span style="font-size:14px;color:var(--text-secondary)">a =</span><input class="num-input" id="pa" type="number" value="3" min="1" max="50" oninput="pyth()"><span style="font-size:14px;color:var(--text-secondary);margin-left:8px">b =</span><input class="num-input" id="pb" type="number" value="4" min="1" max="50" oninput="pyth()"></div></div>
+<div id="tp" style="display:none">
+<div class="row" style="margin-bottom:10px"><span style="font-size:14px;color:var(--text-secondary)">Angle:</span><input type="range" id="ang" min="5" max="85" value="30" style="flex:1" oninput="trig()"><span id="angV" style="font-size:14px;font-weight:600;min-width:30px">30°</span></div>
+<div class="row" style="margin-bottom:10px"><span style="font-size:14px;color:var(--text-secondary)">Hypotenuse:</span><input class="num-input" id="hyp" type="number" value="10" min="1" max="50" oninput="trig()"></div></div>
+<svg id="tri" width="100%" viewBox="0 0 500 350"></svg>
+<div id="steps"></div><div id="res" class="result-box"></div>
+<script>
+let mode='p';const dark=matchMedia('(prefers-color-scheme:dark)').matches;
+const COL=dark?'#818cf8':'#4338ca',COL2=dark?'#5eead4':'#0f766e',TXT=dark?'#fafaf9':'#1c1917',TXTM=dark?'#a8a29e':'#78716c';
+function setM(m){mode=m;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.m===m));document.getElementById('pp').style.display=m==='p'?'':'none';document.getElementById('tp').style.display=m==='t'?'':'none';m==='p'?pyth():trig()}
+function rn(v){return Math.round(v*100)/100}
+function pyth(){
+  const a=parseFloat(document.getElementById('pa').value)||3,b=parseFloat(document.getElementById('pb').value)||4;
+  const c=Math.sqrt(a*a+b*b);
+  const sc=Math.min(250/Math.max(a,b),40);
+  const ox=80,oy=280,ax=ox,ay=oy,bx=ox+b*sc,by=oy,cx=ox,cy=oy-a*sc;
+  const svg=document.getElementById('tri');
+  let o='<polygon points="'+ax+','+ay+' '+bx+','+by+' '+cx+','+cy+'" fill="none" stroke="'+COL+'" stroke-width="2.5"/>';
+  o+='<rect x="'+ax+'" y="'+(ay-12)+'" width="12" height="12" fill="none" stroke="'+TXTM+'" stroke-width="1"/>';
+  o+='<text x="'+(ax-15)+'" y="'+((ay+cy)/2)+'" text-anchor="end" font-size="14" font-weight="600" fill="'+COL+'" font-family="var(--font)">a='+a+'</text>';
+  o+='<text x="'+((ax+bx)/2)+'" y="'+(ay+20)+'" text-anchor="middle" font-size="14" font-weight="600" fill="'+COL2+'" font-family="var(--font)">b='+b+'</text>';
+  o+='<text x="'+((bx+cx)/2+15)+'" y="'+((by+cy)/2)+'" font-size="14" font-weight="600" fill="'+TXT+'" font-family="var(--font)">c='+rn(c)+'</text>';
+  const sqSc=sc*0.4;
+  o+='<rect x="'+(ax-a*sqSc)+'" y="'+(ay-a*sqSc)+'" width="'+(a*sqSc)+'" height="'+(a*sqSc)+'" fill="'+COL+'" opacity=".12" stroke="'+COL+'" stroke-width=".5" rx="2"/>';
+  o+='<text x="'+(ax-a*sqSc/2)+'" y="'+(ay-a*sqSc/2+4)+'" text-anchor="middle" font-size="11" fill="'+COL+'" font-family="var(--font)">'+rn(a*a)+'</text>';
+  o+='<rect x="'+ax+'" y="'+ay+'" width="'+(b*sqSc)+'" height="'+(b*sqSc)+'" fill="'+COL2+'" opacity=".12" stroke="'+COL2+'" stroke-width=".5" rx="2"/>';
+  o+='<text x="'+(ax+b*sqSc/2)+'" y="'+(ay+b*sqSc/2+4)+'" text-anchor="middle" font-size="11" fill="'+COL2+'" font-family="var(--font)">'+rn(b*b)+'</text>';
+  svg.innerHTML=o;
+  let h='<div class="step-card"><div class="step-label">Pythagoras\' theorem: a² + b² = c²</div><div class="step-math">'+rn(a)+'² + '+rn(b)+'² = '+rn(a*a)+' + '+rn(b*b)+' = '+rn(a*a+b*b)+'</div><div class="step-math">c = √'+rn(a*a+b*b)+' = '+rn(c)+'</div></div>';
+  document.getElementById('steps').innerHTML=h;document.getElementById('res').textContent='c = '+rn(c);document.getElementById('res').className='result-box ok';
+}
+function trig(){
+  const deg=parseFloat(document.getElementById('ang').value)||30,hyp=parseFloat(document.getElementById('hyp').value)||10;
+  document.getElementById('angV').textContent=deg+'°';
+  const rad=deg*Math.PI/180,opp=rn(hyp*Math.sin(rad)),adj=rn(hyp*Math.cos(rad));
+  const sc=Math.min(250/hyp,30),ox=80,oy=280;
+  const ax=ox,ay=oy,bx=ox+adj*sc,by=oy,cx=ox,cy=oy-opp*sc;
+  const svg=document.getElementById('tri');
+  let o='<polygon points="'+ax+','+ay+' '+bx+','+by+' '+cx+','+cy+'" fill="none" stroke="'+COL+'" stroke-width="2.5"/>';
+  o+='<rect x="'+ax+'" y="'+(ay-12)+'" width="12" height="12" fill="none" stroke="'+TXTM+'" stroke-width="1"/>';
+  const angRad=15;o+='<path d="M '+(bx-angRad)+' '+by+' A '+angRad+' '+angRad+' 0 0 0 '+(bx-angRad*Math.cos(rad))+' '+(by-angRad*Math.sin(rad))+'" fill="none" stroke="'+COL2+'" stroke-width="1.5"/>';
+  o+='<text x="'+(bx-angRad*1.8*Math.cos(rad/2))+'" y="'+(by-angRad*1.8*Math.sin(rad/2)+4)+'" font-size="12" font-weight="600" fill="'+COL2+'" font-family="var(--font)">'+deg+'°</text>';
+  o+='<text x="'+(ax-15)+'" y="'+((ay+cy)/2)+'" text-anchor="end" font-size="14" font-weight="600" fill="#dc2626" font-family="var(--font)">Opp='+opp+'</text>';
+  o+='<text x="'+((ax+bx)/2)+'" y="'+(ay+20)+'" text-anchor="middle" font-size="14" font-weight="600" fill="'+COL2+'" font-family="var(--font)">Adj='+adj+'</text>';
+  o+='<text x="'+((bx+cx)/2+15)+'" y="'+((by+cy)/2)+'" font-size="14" font-weight="600" fill="'+COL+'" font-family="var(--font)">Hyp='+hyp+'</text>';
+  svg.innerHTML=o;
+  let h='<div class="step-card"><div class="step-label">SOH CAH TOA</div>';
+  h+='<div class="step-math">sin '+deg+'° = Opp/Hyp = '+opp+'/'+hyp+' = '+rn(Math.sin(rad))+'</div>';
+  h+='<div class="step-math">cos '+deg+'° = Adj/Hyp = '+adj+'/'+hyp+' = '+rn(Math.cos(rad))+'</div>';
+  h+='<div class="step-math">tan '+deg+'° = Opp/Adj = '+opp+'/'+adj+' = '+rn(Math.tan(rad))+'</div></div>';
+  document.getElementById('steps').innerHTML=h;
+  document.getElementById('res').textContent='Opp = '+opp+', Adj = '+adj;document.getElementById('res').className='result-box ok';
+}
+pyth();
+</script></div></div></body></html>

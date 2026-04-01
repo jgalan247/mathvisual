@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Area model multiplier — VisualMaths</title><style>
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css');
+
+:root {
+  --brand: #4338ca;
+  --brand-light: #e8e6fc;
+  --brand-dark: #312e81;
+  --teal: #0f766e;
+  --teal-light: #d5f5f0;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --coral: #c2410c;
+  --coral-light: #fff1e6;
+  --pink: #be185d;
+  --pink-light: #fce7f3;
+  --green: #15803d;
+  --green-light: #dcfce7;
+  --surface: #fafaf9;
+  --card: #ffffff;
+  --text: #1c1917;
+  --text-secondary: #78716c;
+  --text-tertiary: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #818cf8;
+    --brand-light: #1e1b4b;
+    --brand-dark: #c7d2fe;
+    --teal: #5eead4;
+    --teal-light: #042f2e;
+    --amber: #fbbf24;
+    --amber-light: #422006;
+    --coral: #fb923c;
+    --coral-light: #431407;
+    --pink: #f472b6;
+    --pink-light: #500724;
+    --green: #4ade80;
+    --green-light: #052e16;
+    --surface: #0c0a09;
+    --card: #1c1917;
+    --text: #fafaf9;
+    --text-secondary: #a8a29e;
+    --text-tertiary: #78716c;
+    --border: #292524;
+    --border-strong: #44403c;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+}
+.nav-home svg { width: 20px; height: 20px; }
+.nav-sep { color: var(--text-tertiary); font-size: 14px; }
+.nav-title { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+
+/* TOOL PAGE LAYOUT */
+.tool-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.tool-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.tool-body {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* COMMON WIDGET STYLES */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+.num-input {
+  width: 56px; font-size: 17px; font-weight: 600; text-align: center; padding: 6px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--card); color: var(--text);
+}
+.num-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand); }
+.sym { font-size: 20px; font-weight: 600; color: var(--text-secondary); }
+select {
+  font-size: 14px; padding: 6px 10px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text);
+}
+button {
+  font-size: 13px; font-weight: 500; padding: 7px 16px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text); cursor: pointer;
+  transition: background 0.15s;
+}
+button:hover { background: var(--surface); }
+button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+button.primary:hover { opacity: 0.9; }
+
+.step-card {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 16px; margin: 8px 0;
+}
+.step-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.step-math { font-size: 16px; font-weight: 600; }
+.result-box {
+  text-align: center; font-size: 20px; font-weight: 700; padding: 14px;
+  background: var(--surface); border-radius: var(--radius-sm); margin: 12px 0;
+}
+.result-box.ok { color: var(--green); background: var(--green-light); }
+.hint { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+.bar-outer {
+  height: 38px; border-radius: 6px; overflow: hidden; display: flex;
+  border: 1px solid var(--border-strong);
+}
+.bar-seg { height: 100%; border-right: 1px solid rgba(0,0,0,0.08); }
+.bar-seg:last-child { border-right: none; }
+
+.mode-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.mode-btn { font-size: 13px; padding: 6px 14px; }
+.mode-btn.active { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
+
+/* WEIGHT BLOCKS (seesaw) */
+.wb {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 32px; padding: 0 8px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: grab; touch-action: none;
+}
+.wb:active { cursor: grabbing; }
+.w1 { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.w2 { background: var(--brand-light); color: var(--brand-dark); border: 1px solid #a5b4fc; }
+.w5 { background: var(--amber-light); color: var(--amber); border: 1px solid #fcd34d; }
+.w10 { background: var(--coral-light); color: var(--coral); border: 1px solid #fdba74; }
+.wx { background: var(--pink-light); color: var(--pink); border: 1px solid #f9a8d4; font-style: italic; }
+.wn { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* GRID TABLE */
+.g-table { border-collapse: collapse; }
+.g-table td, .g-table th { padding: 10px 16px; text-align: center; font-size: 15px; }
+.g-table th { font-weight: 600; color: var(--text-secondary); }
+
+/* CANVAS / SVG */
+canvas, svg { display: block; }
+
+/* HOMEPAGE */
+.home-hero {
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.home-hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topic-card:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+}
+.card-title { font-size: 15px; font-weight: 600; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; background: var(--surface); color: var(--text-tertiary);
+  align-self: flex-start; margin-top: auto;
+}
+
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-tertiary); padding: 0 20px; max-width: 960px; margin: 24px auto 8px;
+}
+
+</style>
+</head><body>
+<nav class="site-nav"><a href="index.html" class="nav-home"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l7-7 7 7M5 8.5V16h4v-4h2v4h4V8.5"/></svg> VisualMaths</a><span class="nav-sep">/</span><span class="nav-title">Area model multiplier</span></nav>
+<div class="tool-page"><div class="tool-header"><h1>Area model multiplier</h1><p>Visualise multiplication as area. Enter two numbers to see them decomposed into place-value parts with proportional rectangles.</p></div><div class="tool-body">
+<div class="row" style="margin-bottom:14px">
+  <input class="num-input" id="nA" type="number" value="23" min="2" max="999" oninput="rebuild()">
+  <span class="sym">&times;</span>
+  <input class="num-input" id="nB" type="number" value="17" min="2" max="999" oninput="rebuild()">
+  <span class="sym">=</span>
+  <span id="tot" style="font-size:22px;font-weight:700">?</span>
+</div>
+<div id="decomp" class="hint" style="margin-bottom:14px"></div>
+<div id="grid"></div>
+<div class="row" style="margin-top:14px;gap:8px">
+  <button onclick="checkAll()">Check answers</button>
+  <button onclick="revealAll()">Reveal</button>
+  <button onclick="newRnd()">Random</button>
+</div>
+<div id="fb" class="hint"></div>
+<script>
+const C=[{f:'#e8e6fc',s:'#4338ca',t:'#312e81'},{f:'#d5f5f0',s:'#0f766e',t:'#042f2e'},{f:'#fef3c7',s:'#b45309',t:'#78350f'},{f:'#fff1e6',s:'#c2410c',t:'#7c2d12'},{f:'#fce7f3',s:'#be185d',t:'#831843'},{f:'#dcfce7',s:'#15803d',t:'#052e16'}];
+let cells=[];
+function decompose(n){n=Math.abs(Math.floor(n));if(n<2)return[n];const p=[];let place=1;while(n>0){const d=n%10;if(d>0)p.unshift(d*place);n=Math.floor(n/10);place*=10;}return p.length?p:[0];}
+function rebuild(){
+  const a=parseInt(document.getElementById('nA').value)||0,b=parseInt(document.getElementById('nB').value)||0;
+  const pA=decompose(a),pB=decompose(b);
+  document.getElementById('decomp').textContent='('+pA.join(' + ')+') × ('+pB.join(' + ')+')';
+  document.getElementById('tot').textContent='?';document.getElementById('fb').textContent='Fill in each rectangle\'s area, then check.';
+  cells=[];const w=document.getElementById('grid');
+  const sA=pA.reduce((s,v)=>s+v,0)||1,sB=pB.reduce((s,v)=>s+v,0)||1;
+  const gW=Math.min(620,w.parentElement.offsetWidth-48);
+  let svg='<svg width="100%" viewBox="0 0 '+(gW+60)+' '+(340)+'">';
+  const colW=pB.map(v=>(v/sB)*gW),rowH=pA.map(v=>(v/sA)*280);
+  let ci=0,cy=44;
+  for(let r=0;r<pA.length;r++){
+    let cx=60;
+    svg+='<text x="52" y="'+(cy+rowH[r]/2)+'" text-anchor="end" dominant-baseline="central" font-size="14" font-weight="600" fill="currentColor">'+pA[r]+'</text>';
+    for(let c=0;c<pB.length;c++){
+      const col=C[ci%C.length],prod=pA[r]*pB[c],id='c'+r+'-'+c;
+      svg+='<rect x="'+cx+'" y="'+cy+'" width="'+colW[c]+'" height="'+rowH[r]+'" rx="4" fill="'+col.f+'" stroke="'+col.s+'" stroke-width="0.5"/>';
+      const mx=cx+colW[c]/2,my=cy+rowH[r]/2;
+      svg+='<text x="'+mx+'" y="'+(my-14)+'" text-anchor="middle" font-size="12" fill="'+col.t+'">'+pA[r]+' × '+pB[c]+'</text>';
+      svg+='<foreignObject x="'+(mx-38)+'" y="'+(my-2)+'" width="76" height="32"><input xmlns="http://www.w3.org/1999/xhtml" type="text" id="'+id+'" placeholder="?" style="width:70px;font-size:15px;text-align:center;padding:4px;border:1px solid var(--border-strong);border-radius:6px;background:var(--card);color:var(--text)"/></foreignObject>';
+      cells.push({id,answer:prod});cx+=colW[c];ci++;
+    }
+    cy+=rowH[r];
+  }
+  let bx=60;for(let c=0;c<pB.length;c++){svg+='<text x="'+(bx+colW[c]/2)+'" y="30" text-anchor="middle" font-size="14" font-weight="600" fill="currentColor">'+pB[c]+'</text>';bx+=colW[c];}
+  svg+='</svg>';w.innerHTML=svg;
+}
+function checkAll(){
+  let ok=true,n=0,s=0;
+  cells.forEach(c=>{const el=document.getElementById(c.id);if(!el)return;const v=parseInt(el.value);if(isNaN(v))return;n++;if(v===c.answer){el.style.borderColor='#15803d';el.style.background='#dcfce7';s+=v}else{el.style.borderColor='#dc2626';el.style.background='#fee2e2';ok=false}});
+  const a=parseInt(document.getElementById('nA').value)||0,b=parseInt(document.getElementById('nB').value)||0;
+  if(ok&&n===cells.length){document.getElementById('tot').textContent=a*b;document.getElementById('tot').style.color='#15803d';document.getElementById('fb').textContent='Correct! '+cells.map(c=>c.answer).join(' + ')+' = '+(a*b)}
+  else if(!ok){document.getElementById('fb').textContent='Some are incorrect — try again.'}
+  else{document.getElementById('fb').textContent=n+'/'+cells.length+' filled.'}
+}
+function revealAll(){const a=parseInt(document.getElementById('nA').value)||0,b=parseInt(document.getElementById('nB').value)||0;cells.forEach(c=>{const el=document.getElementById(c.id);if(el){el.value=c.answer;el.style.borderColor='#15803d';el.style.background='#dcfce7'}});document.getElementById('tot').textContent=a*b;document.getElementById('tot').style.color='#15803d';document.getElementById('fb').textContent=cells.map(c=>c.answer).join(' + ')+' = '+(a*b)}
+function newRnd(){const t=()=>Math.floor(Math.random()*89)+11;document.getElementById('nA').value=t();document.getElementById('nB').value=t();document.getElementById('tot').style.color='';rebuild()}
+rebuild();
+</script>
+</div></div></body></html>

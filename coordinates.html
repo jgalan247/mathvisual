@@ -1,0 +1,286 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Coordinate geometry — VisualMaths</title><style>
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css');
+
+:root {
+  --brand: #4338ca;
+  --brand-light: #e8e6fc;
+  --brand-dark: #312e81;
+  --teal: #0f766e;
+  --teal-light: #d5f5f0;
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --coral: #c2410c;
+  --coral-light: #fff1e6;
+  --pink: #be185d;
+  --pink-light: #fce7f3;
+  --green: #15803d;
+  --green-light: #dcfce7;
+  --surface: #fafaf9;
+  --card: #ffffff;
+  --text: #1c1917;
+  --text-secondary: #78716c;
+  --text-tertiary: #a8a29e;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #818cf8;
+    --brand-light: #1e1b4b;
+    --brand-dark: #c7d2fe;
+    --teal: #5eead4;
+    --teal-light: #042f2e;
+    --amber: #fbbf24;
+    --amber-light: #422006;
+    --coral: #fb923c;
+    --coral-light: #431407;
+    --pink: #f472b6;
+    --pink-light: #500724;
+    --green: #4ade80;
+    --green-light: #052e16;
+    --surface: #0c0a09;
+    --card: #1c1917;
+    --text: #fafaf9;
+    --text-secondary: #a8a29e;
+    --text-tertiary: #78716c;
+    --border: #292524;
+    --border-strong: #44403c;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+}
+.nav-home svg { width: 20px; height: 20px; }
+.nav-sep { color: var(--text-tertiary); font-size: 14px; }
+.nav-title { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+
+/* TOOL PAGE LAYOUT */
+.tool-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.tool-header {
+  margin-bottom: 24px;
+}
+.tool-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.tool-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.tool-body {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* COMMON WIDGET STYLES */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 6px; }
+.num-input {
+  width: 56px; font-size: 17px; font-weight: 600; text-align: center; padding: 6px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--card); color: var(--text);
+}
+.num-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; border-color: var(--brand); }
+.sym { font-size: 20px; font-weight: 600; color: var(--text-secondary); }
+select {
+  font-size: 14px; padding: 6px 10px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text);
+}
+button {
+  font-size: 13px; font-weight: 500; padding: 7px 16px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); background: var(--card); color: var(--text); cursor: pointer;
+  transition: background 0.15s;
+}
+button:hover { background: var(--surface); }
+button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+button.primary:hover { opacity: 0.9; }
+
+.step-card {
+  background: var(--surface); border-radius: var(--radius-sm); padding: 12px 16px; margin: 8px 0;
+}
+.step-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.step-math { font-size: 16px; font-weight: 600; }
+.result-box {
+  text-align: center; font-size: 20px; font-weight: 700; padding: 14px;
+  background: var(--surface); border-radius: var(--radius-sm); margin: 12px 0;
+}
+.result-box.ok { color: var(--green); background: var(--green-light); }
+.hint { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+.bar-outer {
+  height: 38px; border-radius: 6px; overflow: hidden; display: flex;
+  border: 1px solid var(--border-strong);
+}
+.bar-seg { height: 100%; border-right: 1px solid rgba(0,0,0,0.08); }
+.bar-seg:last-child { border-right: none; }
+
+.mode-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.mode-btn { font-size: 13px; padding: 6px 14px; }
+.mode-btn.active { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
+
+/* WEIGHT BLOCKS (seesaw) */
+.wb {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; height: 32px; padding: 0 8px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: grab; touch-action: none;
+}
+.wb:active { cursor: grabbing; }
+.w1 { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.w2 { background: var(--brand-light); color: var(--brand-dark); border: 1px solid #a5b4fc; }
+.w5 { background: var(--amber-light); color: var(--amber); border: 1px solid #fcd34d; }
+.w10 { background: var(--coral-light); color: var(--coral); border: 1px solid #fdba74; }
+.wx { background: var(--pink-light); color: var(--pink); border: 1px solid #f9a8d4; font-style: italic; }
+.wn { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* GRID TABLE */
+.g-table { border-collapse: collapse; }
+.g-table td, .g-table th { padding: 10px 16px; text-align: center; font-size: 15px; }
+.g-table th { font-weight: 600; color: var(--text-secondary); }
+
+/* CANVAS / SVG */
+canvas, svg { display: block; }
+
+/* HOMEPAGE */
+.home-hero {
+  text-align: center;
+  padding: 48px 20px 36px;
+}
+.home-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.home-hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topic-card:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+}
+.card-title { font-size: 15px; font-weight: 600; }
+.card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; background: var(--surface); color: var(--text-tertiary);
+  align-self: flex-start; margin-top: auto;
+}
+
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-tertiary); padding: 0 20px; max-width: 960px; margin: 24px auto 8px;
+}
+
+</style></head><body><nav class="site-nav"><a href="index.html" class="nav-home"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l7-7 7 7M5 8.5V16h4v-4h2v4h4V8.5"/></svg> VisualMaths</a><span class="nav-sep">/</span><span class="nav-title">Coordinate geometry</span></nav><div class="tool-page"><div class="tool-header"><h1>Coordinate geometry</h1><p>Explore y = mx + c interactively. Use sliders to adjust the gradient and y-intercept and see the line update in real time.</p></div><div class="tool-body"><div class="row" style="margin-bottom:8px"><span style="font-size:14px;color:var(--text-secondary)">Gradient (m):</span><input type="range" id="mSlider" min="-5" max="5" step="0.5" value="2" style="flex:1" oninput="draw()"><span id="mVal" style="font-size:14px;font-weight:600;min-width:30px">2</span></div>
+<div class="row" style="margin-bottom:12px"><span style="font-size:14px;color:var(--text-secondary)">Intercept (c):</span><input type="range" id="cSlider" min="-5" max="5" step="0.5" value="1" style="flex:1" oninput="draw()"><span id="cVal" style="font-size:14px;font-weight:600;min-width:30px">1</span></div>
+<div id="eq" style="text-align:center;font-size:20px;font-weight:700;margin-bottom:8px">y = 2x + 1</div>
+<canvas id="cv" width="600" height="400" style="width:100%;border:1px solid var(--border);border-radius:var(--radius-sm)"></canvas>
+<div id="info" style="margin-top:8px"></div>
+<div class="row" style="margin-top:10px;gap:6px">
+<button onclick="addLine()">+ Compare line</button><button onclick="clearLines()">Clear extra lines</button>
+</div>
+<script>
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+let extras=[];const dark=matchMedia('(prefers-color-scheme:dark)').matches;
+const BG=dark?'#1c1917':'#fff',GRID=dark?'#292524':'#f1f0ea',AXIS=dark?'#78716c':'#a8a29e',LINE1=dark?'#818cf8':'#4338ca',TXT=dark?'#fafaf9':'#1c1917',TXTM=dark?'#a8a29e':'#78716c';
+const ECOL=['#5eead4','#fb923c','#f472b6','#4ade80'];
+function draw(){
+  const m=parseFloat(document.getElementById('mSlider').value),c=parseFloat(document.getElementById('cSlider').value);
+  document.getElementById('mVal').textContent=m;document.getElementById('cVal').textContent=c;
+  const cs=c>=0?'+ '+c:c<0?'- '+Math.abs(c):'';
+  document.getElementById('eq').textContent='y = '+(m===1?'':m===-1?'-':m)+'x '+(c?cs:'');
+  const W=600,H=400,ox=W/2,oy=H/2,sc=30;
+  ctx.fillStyle=BG;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle=GRID;ctx.lineWidth=.5;
+  for(let i=-10;i<=10;i++){const x=ox+i*sc;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();const y=oy+i*sc;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+  ctx.strokeStyle=AXIS;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+  ctx.fillStyle=TXTM;ctx.font='11px var(--font)';ctx.textAlign='center';
+  for(let i=-9;i<=9;i++){if(i===0)continue;ctx.fillText(i,ox+i*sc,oy+14)}
+  ctx.textAlign='right';for(let i=-6;i<=6;i++){if(i===0)continue;ctx.fillText(-i,ox-6,oy+i*sc+4)}
+  function drawLine(m,c,col,w){ctx.strokeStyle=col;ctx.lineWidth=w;ctx.beginPath();const x1=-10,y1=m*x1+c,x2=10,y2=m*x2+c;ctx.moveTo(ox+x1*sc,oy-y1*sc);ctx.lineTo(ox+x2*sc,oy-y2*sc);ctx.stroke()}
+  extras.forEach((e,i)=>drawLine(e.m,e.c,ECOL[i%4],1.5));
+  drawLine(m,c,LINE1,2.5);
+  ctx.fillStyle=LINE1;ctx.beginPath();ctx.arc(ox,oy-c*sc,5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=TXT;ctx.font='12px var(--font)';ctx.textAlign='left';ctx.fillText('(0, '+c+')',ox+8,oy-c*sc-8);
+  const info=document.getElementById('info');
+  let ih='<div class="row" style="gap:12px;flex-wrap:wrap">';
+  ih+='<div class="step-card" style="flex:1;min-width:100px"><div class="step-label">Gradient</div><div class="step-math">m = '+m+'</div><div class="hint">Rise/Run = '+(m>=0?m:m)+'</div></div>';
+  ih+='<div class="step-card" style="flex:1;min-width:100px"><div class="step-label">y-intercept</div><div class="step-math">(0, '+c+')</div></div>';
+  ih+='<div class="step-card" style="flex:1;min-width:100px"><div class="step-label">x-intercept</div><div class="step-math">'+(m!==0?'('+Math.round(-c/m*100)/100+', 0)':'none (horizontal)')+'</div></div>';
+  ih+='</div>';info.innerHTML=ih;
+}
+function addLine(){const m=parseFloat(document.getElementById('mSlider').value),c=parseFloat(document.getElementById('cSlider').value);extras.push({m,c});draw()}
+function clearLines(){extras=[];draw()}
+draw();
+</script></div></div></body></html>
