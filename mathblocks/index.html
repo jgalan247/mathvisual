@@ -250,37 +250,6 @@
               <span class="soh-leg-item" style="color:#10b981">■ Hypotenuse (H)</span>
             </div>
 
-            <!-- SOHCAHTOA Explanation Panel -->
-            <div id="sohExplainPanel" style="background:rgba(15,23,42,.6);border:1px solid rgba(148,163,184,.15);border-radius:10px;padding:16px 18px;margin-top:12px">
-              <div style="font-weight:700;font-size:14px;color:#f43f5e;margin-bottom:10px;letter-spacing:0.5px">SOHCAHTOA — The Three Ratios</div>
-              <div style="font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:12px">
-                In a right-angled triangle, the three trigonometric ratios connect an angle to the lengths of two sides. The mnemonic <strong style="color:#e2e8f0">SOH-CAH-TOA</strong> helps you remember which ratio to use.
-              </div>
-              <div id="sohEqSOH" style="background:rgba(239,68,68,.08);border-left:3px solid #ef4444;border-radius:0 6px 6px 0;padding:10px 14px;margin-bottom:8px">
-                <div style="font-weight:700;color:#ef4444;font-size:13px;margin-bottom:4px">SOH — Sine</div>
-                <div id="sohEqSinKatex" style="margin:4px 0"></div>
-                <div style="font-size:12px;color:#94a3b8;margin-top:4px">Use when you have or need the <strong style="color:#ef4444">Opposite</strong> and <strong style="color:#10b981">Hypotenuse</strong>.</div>
-              </div>
-              <div id="sohEqCAH" style="background:rgba(59,130,246,.08);border-left:3px solid #3b82f6;border-radius:0 6px 6px 0;padding:10px 14px;margin-bottom:8px">
-                <div style="font-weight:700;color:#3b82f6;font-size:13px;margin-bottom:4px">CAH — Cosine</div>
-                <div id="sohEqCosKatex" style="margin:4px 0"></div>
-                <div style="font-size:12px;color:#94a3b8;margin-top:4px">Use when you have or need the <strong style="color:#3b82f6">Adjacent</strong> and <strong style="color:#10b981">Hypotenuse</strong>.</div>
-              </div>
-              <div id="sohEqTOA" style="background:rgba(245,158,11,.08);border-left:3px solid #f59e0b;border-radius:0 6px 6px 0;padding:10px 14px;margin-bottom:8px">
-                <div style="font-weight:700;color:#f59e0b;font-size:13px;margin-bottom:4px">TOA — Tangent</div>
-                <div id="sohEqTanKatex" style="margin:4px 0"></div>
-                <div style="font-size:12px;color:#94a3b8;margin-top:4px">Use when you have or need the <strong style="color:#ef4444">Opposite</strong> and <strong style="color:#3b82f6">Adjacent</strong>.</div>
-              </div>
-              <div style="font-size:12px;color:#64748b;line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid rgba(148,163,184,.1)">
-                <strong style="color:#94a3b8">How to use:</strong>
-                <ol style="margin:6px 0 0 16px;padding:0">
-                  <li style="margin-bottom:3px"><strong style="color:#e2e8f0">Label</strong> the sides relative to the angle θ — which is opposite, adjacent, and the hypotenuse?</li>
-                  <li style="margin-bottom:3px"><strong style="color:#e2e8f0">Choose</strong> the ratio that connects the side you <em>know</em> with the side you <em>need</em>.</li>
-                  <li style="margin-bottom:3px"><strong style="color:#e2e8f0">Substitute</strong> the known values into the formula.</li>
-                  <li><strong style="color:#e2e8f0">Rearrange</strong> and solve for the unknown.</li>
-                </ol>
-              </div>
-            </div>
           </div>
 
           <!-- RIGHT: Student workspace -->
@@ -372,6 +341,40 @@
               <div class="qw-solution" id="sohSolutionArea" style="display:none"></div>
             </div>
 
+          </div>
+        </div>
+
+        <!-- SOHCAHTOA Explanation Panel (full width) -->
+        <div id="sohExplainPanel" style="background:rgba(15,23,42,.6);border:1px solid rgba(148,163,184,.15);border-radius:10px;padding:18px 22px;margin:16px 12px 0">
+          <div style="font-weight:700;font-size:15px;color:#f43f5e;margin-bottom:8px;letter-spacing:0.5px">SOHCAHTOA — The Three Ratios</div>
+          <div style="font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:14px">
+            In a right-angled triangle, the three trigonometric ratios connect an angle to the lengths of two sides. The mnemonic <strong style="color:#e2e8f0">SOH-CAH-TOA</strong> helps you remember which ratio to use.
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+            <div id="sohEqSOH" style="background:rgba(239,68,68,.08);border-left:3px solid #ef4444;border-radius:0 6px 6px 0;padding:12px 14px">
+              <div style="font-weight:700;color:#ef4444;font-size:13px;margin-bottom:6px">SOH — Sine</div>
+              <div id="sohEqSinKatex" style="margin:4px 0"></div>
+              <div style="font-size:12px;color:#94a3b8;margin-top:6px">Use when you have or need the <strong style="color:#ef4444">Opposite</strong> and <strong style="color:#10b981">Hypotenuse</strong>.</div>
+            </div>
+            <div id="sohEqCAH" style="background:rgba(59,130,246,.08);border-left:3px solid #3b82f6;border-radius:0 6px 6px 0;padding:12px 14px">
+              <div style="font-weight:700;color:#3b82f6;font-size:13px;margin-bottom:6px">CAH — Cosine</div>
+              <div id="sohEqCosKatex" style="margin:4px 0"></div>
+              <div style="font-size:12px;color:#94a3b8;margin-top:6px">Use when you have or need the <strong style="color:#3b82f6">Adjacent</strong> and <strong style="color:#10b981">Hypotenuse</strong>.</div>
+            </div>
+            <div id="sohEqTOA" style="background:rgba(245,158,11,.08);border-left:3px solid #f59e0b;border-radius:0 6px 6px 0;padding:12px 14px">
+              <div style="font-weight:700;color:#f59e0b;font-size:13px;margin-bottom:6px">TOA — Tangent</div>
+              <div id="sohEqTanKatex" style="margin:4px 0"></div>
+              <div style="font-size:12px;color:#94a3b8;margin-top:6px">Use when you have or need the <strong style="color:#ef4444">Opposite</strong> and <strong style="color:#3b82f6">Adjacent</strong>.</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#64748b;line-height:1.5;margin-top:14px;padding-top:12px;border-top:1px solid rgba(148,163,184,.1)">
+            <strong style="color:#94a3b8">How to use:</strong>
+            <ol style="margin:6px 0 0 16px;padding:0;columns:2;column-gap:32px">
+              <li style="margin-bottom:3px"><strong style="color:#e2e8f0">Label</strong> the sides relative to the angle θ — which is opposite, adjacent, and the hypotenuse?</li>
+              <li style="margin-bottom:3px"><strong style="color:#e2e8f0">Choose</strong> the ratio that connects the side you <em>know</em> with the side you <em>need</em>.</li>
+              <li style="margin-bottom:3px"><strong style="color:#e2e8f0">Substitute</strong> the known values into the formula.</li>
+              <li><strong style="color:#e2e8f0">Rearrange</strong> and solve for the unknown.</li>
+            </ol>
           </div>
         </div>
       </div>
