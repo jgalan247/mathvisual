@@ -464,6 +464,56 @@
         </div>
       </div>
 
+      <!-- ═══ ANGLE RELATIONSHIPS ═══ -->
+      <div id="anglesMode" class="explorer-main" style="display:none">
+        <div class="explorer-title"><span class="et-icon" style="background:#3b82f6">∠</span> Angle Relationships</div>
+
+        <!-- Mode selector -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;padding:0 12px;margin-bottom:12px">
+          <button class="ang-mode-btn active" data-amode="complementary" style="--ac:#3b82f6">Complementary</button>
+          <button class="ang-mode-btn" data-amode="supplementary" style="--ac:#8b5cf6">Supplementary</button>
+          <button class="ang-mode-btn" data-amode="vertically" style="--ac:#f59e0b">Vertically Opposite</button>
+          <button class="ang-mode-btn" data-amode="alternate" style="--ac:#10b981">Alternate (Z)</button>
+          <button class="ang-mode-btn" data-amode="cointerior" style="--ac:#ef4444">Co-interior (C)</button>
+          <button class="ang-mode-btn" data-amode="corresponding" style="--ac:#ec4899">Corresponding (F)</button>
+        </div>
+
+        <div style="display:flex;gap:16px;padding:0 12px;flex-wrap:wrap">
+          <!-- LEFT: Canvas -->
+          <div style="flex:1;min-width:320px">
+            <canvas id="angCanvas" width="600" height="400" style="width:100%;background:rgba(15,23,42,.4);border-radius:10px;border:1px solid rgba(148,163,184,.1)"></canvas>
+          </div>
+
+          <!-- RIGHT: Controls + info -->
+          <div style="flex:1;min-width:280px">
+            <div class="qw-section">
+              <div class="qw-title" style="color:#3b82f6">Adjust the angle</div>
+              <div style="display:flex;align-items:center;gap:10px;margin:10px 0">
+                <span style="color:#64748b;font-size:12px">1°</span>
+                <input type="range" id="angSlider" min="1" max="89" step="1" value="55" style="flex:1;accent-color:#3b82f6">
+                <span style="color:#64748b;font-size:12px">89°</span>
+              </div>
+              <div style="display:flex;gap:16px;margin:14px 0">
+                <div style="text-align:center;flex:1">
+                  <div style="font-size:11px;color:#64748b;margin-bottom:4px">Angle α</div>
+                  <div id="angAngleDisplay" style="font-size:28px;font-weight:800;color:#3b82f6">55°</div>
+                </div>
+                <div style="text-align:center;flex:1">
+                  <div style="font-size:11px;color:#64748b;margin-bottom:4px" id="angRelLabel">Complement</div>
+                  <div id="angRelated" style="font-size:28px;font-weight:800;color:#3b82f6">35°</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="qw-section" style="margin-top:10px">
+              <div id="angDesc" style="font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:10px">Two angles that add up to 90°</div>
+              <div id="angRule" style="font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:10px">55° + 35° = 90°</div>
+              <div id="angKatex" style="margin:8px 0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- Right panel (builder mode only) -->
@@ -486,5 +536,6 @@
   <script src="js/quadratic.js"></script>
   <script src="js/sohcahtoa.js"></script>
   <script src="js/fractions.js"></script>
+  <script src="js/angles.js"></script>
 </body>
 </html>

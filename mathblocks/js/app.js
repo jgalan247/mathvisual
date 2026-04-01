@@ -39,6 +39,7 @@ const CATS=[
   {id:"equations",label:"⚖ Linear Equations",color:"#f97316",mode:"equation"},
   {id:"quadratic",label:"📐 Quadratics",color:"#06b6d4",mode:"quadratic"},
   {id:"sohcahtoa",label:"△ SOHCAHTOA",color:"#f43f5e",mode:"sohcahtoa"},
+  {id:"angles",label:"∠ Angles",color:"#3b82f6",mode:"angles"},
 ];
 
 const INLABELS={A:"A",B:"B",X:"value",NUM:"num",DEN:"den",BASE:"base",EXP:"exp",N:"n"};
@@ -72,6 +73,7 @@ function switchMode(mode){
   document.getElementById("quadraticMode").style.display=mode==="quadratic"?"flex":"none";
   document.getElementById("sohcahtoaMode").style.display=mode==="sohcahtoa"?"flex":"none";
   document.getElementById("fractionsMode").style.display=mode==="fractions"?"flex":"none";
+  document.getElementById("anglesMode").style.display=mode==="angles"?"flex":"none";
   document.getElementById("outputPanel").classList.toggle("hidden",mode!=="builder");
 
   if(mode==="trig")setTimeout(function(){updateTrigExplorer(parseInt(document.getElementById("trigAngleSlider").value))},60);
@@ -79,6 +81,7 @@ function switchMode(mode){
   if(mode==="quadratic")setTimeout(function(){updateQuadratic()},60);
   if(mode==="sohcahtoa")setTimeout(function(){updateSOH()},60);
   if(mode==="fractions")setTimeout(function(){updateFractions()},60);
+  if(mode==="angles")setTimeout(function(){updateAngles()},60);
 }
 
 // ── Render ──
@@ -145,7 +148,7 @@ document.addEventListener("DOMContentLoaded",function(){
   document.getElementById("builderMode").style.flexDirection="column";
   document.getElementById("builderMode").style.flex="1";
 
-  initTrigExplorer();initEquationBalance();initQuadratic();initSOH();initFractions();
+  initTrigExplorer();initEquationBalance();initQuadratic();initSOH();initFractions();initAngles();
   renderAll();updateResult()});
 
 // ═══ Trig Explorer ═══

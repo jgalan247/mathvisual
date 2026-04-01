@@ -15,7 +15,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);heig
 .cat-sep{width:1px;background:var(--border);margin:2px 4px;pointer-events:none}
 
 .main-container{display:flex;flex:1;overflow:hidden}
-.workspace{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.workspace{flex:1;display:flex;flex-direction:column;min-width:0;overflow:auto}
 
 /* Builder */
 .toolbox{background:#0d1320;border-bottom:1px solid var(--border);padding:8px 14px}
@@ -434,5 +434,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);heig
 .output-panel::-webkit-scrollbar,.explorer-controls-area::-webkit-scrollbar,.explorer-canvas-area::-webkit-scrollbar,.eq-left-col::-webkit-scrollbar,.eq-right-col::-webkit-scrollbar,.eq-step-log::-webkit-scrollbar{width:5px}
 .output-panel::-webkit-scrollbar-thumb,.explorer-controls-area::-webkit-scrollbar-thumb,.explorer-canvas-area::-webkit-scrollbar-thumb,.eq-left-col::-webkit-scrollbar-thumb,.eq-right-col::-webkit-scrollbar-thumb,.eq-step-log::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 *::-webkit-scrollbar-track{background:transparent}
+
+/* Angle mode buttons */
+.ang-mode-btn{padding:7px 14px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--dim);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.ang-mode-btn:hover{border-color:var(--ac,#3b82f6);color:var(--ac,#3b82f6)}
+.ang-mode-btn.active{background:var(--ac,#3b82f6);color:#fff;border-color:var(--ac,#3b82f6)}
 
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
