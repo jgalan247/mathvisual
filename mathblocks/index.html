@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathBlocks — Visual Equation Builder</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="../index.html" style="text-decoration:none;color:#94a3b8;font-size:13px;margin-right:10px;white-space:nowrap">&larr; VisualMaths</a>
+    <div class="logo"><div class="logo-icon">fx</div><div class="logo-text">Math<span>Blocks</span></div></div>
+    <nav class="category-tabs" id="categoryTabs"></nav>
+  </header>
+
+  <div class="main-container">
+    <div class="workspace" id="workspace">
+
+      <!-- Block builder -->
+      <div id="builderMode">
+        <div class="toolbox" id="toolbox"><div class="block-palette" id="blockPalette"></div></div>
+        <div class="canvas empty" id="canvas"><div class="canvas-placeholder">Drag a block here to start building your equation</div></div>
+      </div>
+
+      <!-- Trig explorer -->
+      <div id="trigMode" class="explorer-main" style="display:none">
+        <div class="explorer-title"><span class="et-icon" style="background:#ec4899">θ</span> Trigonometry Explorer</div>
+        <div class="explorer-layout">
+          <div class="explorer-canvas-area"><canvas id="trigCanvas" width="500" height="500"></canvas></div>
+          <div class="explorer-controls-area">
+            <div class="ctrl-group"><label class="ctrl-label">Angle</label><div class="ctrl-slider-row"><input type="range" id="trigAngleSlider" min="0" max="360" step="1" value="45" style="accent-color:#ec4899"><span class="ctrl-val pink-val" id="trigAngleDisplay">45°</span></div><div class="ctrl-sub" id="trigRadiansDisplay">= π/4 rad</div></div>
+            <div class="trig-values-grid">
+              <div class="tv-item sin-item"><span class="tv-label">sin θ</span><span class="tv-num" id="trigSinVal">0.7071</span></div>
+              <div class="tv-item cos-item"><span class="tv-label">cos θ</span><span class="tv-num" id="trigCosVal">0.7071</span></div>
+              <div class="tv-item tan-item"><span class="tv-label">tan θ</span><span class="tv-num" id="trigTanVal">1.0000</span></div>
+            </div>
+            <div class="explorer-info" id="trigExplanation"></div>
+            <div class="trig-quadrant" id="trigQuadrant">Quadrant I — sin+, cos+, tan+</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ EQUATION BALANCE ═══ -->
+      <div id="equationMode" class="explorer-main" style="display:none">
+        <div class="eq-balance-hero">
+          <canvas id="eqCanvas1" width="800" height="220"></canvas>
+          <canvas id="eqCanvas2" width="800" height="220" style="display:none"></canvas>
+        </div>
+        <div class="eq-katex-bar">
+          <div class="eq-katex-inner" id="eqKatex1"></div>
+          <div class="eq-katex-inner" id="eqKatex2" style="display:none"></div>
+        </div>
+        <div class="elim-panel" id="elimPanel" style="display:none">
+          <div class="elim-stack">
+            <div class="elim-row elim-top"><span class="elim-op" id="elimOpSign">+</span><span class="elim-term" id="elimT1x"></span><span class="elim-term" id="elimT1y"></span><span class="elim-eq">=</span><span class="elim-term" id="elimT1c"></span></div>
+            <div class="elim-row elim-bottom"><span class="elim-op-space"></span><span class="elim-term" id="elimT2x"></span><span class="elim-term" id="elimT2y"></span><span class="elim-eq">=</span><span class="elim-term" id="elimT2c"></span></div>
+            <div class="elim-divider"></div>
+            <div class="elim-row elim-result"><span class="elim-op-space"></span><span class="elim-term" id="elimRx"></span><span class="elim-term" id="elimRy"></span><span class="elim-eq">=</span><span class="elim-term" id="elimRc"></span></div>
+            <div class="elim-annotation" id="elimAnnotation"></div>
+          </div>
+          <button class="elim-close" id="elimClose">✕</button>
+        </div>
+        <div class="eq-columns">
+          <div class="eq-left-col">
+            <div class="eq-mode-row">
+              <div class="eq-mode-toggle"><button class="eq-mode-btn active" id="modeSingle">Single Variable</button><button class="eq-mode-btn" id="modeSimultaneous">Simultaneous</button></div>
+              <div class="eq-source-bar"><button class="eq-src-btn active" data-src="manual">✏️ Manual</button><button class="eq-src-btn" data-src="exercises">📋 Exercises</button><button class="eq-src-btn" data-src="csv">📁 CSV</button></div>
+            </div>
+            <div id="eqSrcManual" class="eq-src-panel">
+              <div class="eq-manual-single" id="eqManualSingle">
+                <div class="eq-build-row-wrap"><span class="eq-build-tag">Eq 1:</span><input type="number" id="eqA1" class="eq-inp" value="2" step="1"><span class="eq-sym-x">x</span><span class="eq-sym">+</span><input type="number" id="eqB1" class="eq-inp" value="3" step="1"><span class="eq-sym eq-eq">=</span><input type="number" id="eqC1" class="eq-inp" value="0" step="1"><span class="eq-sym-x">x</span><span class="eq-sym">+</span><input type="number" id="eqD1" class="eq-inp" value="7" step="1"></div>
+              </div>
+              <div class="eq-manual-simul" id="eqManualSimul" style="display:none">
+                <div class="eq-build-row-wrap"><span class="eq-build-tag">Eq 1:</span><input type="number" id="eqSA1" class="eq-inp" value="1" step="1"><span class="eq-sym-x">x</span><span class="eq-sym">+</span><input type="number" id="eqSB1" class="eq-inp" value="1" step="1"><span class="eq-sym-y">y</span><span class="eq-sym">=</span><input type="number" id="eqSC1" class="eq-inp" value="10" step="1"></div>
+                <div class="eq-build-row-wrap"><span class="eq-build-tag">Eq 2:</span><input type="number" id="eqSA2" class="eq-inp" value="2" step="1"><span class="eq-sym-x">x</span><span class="eq-sym">+</span><input type="number" id="eqSB2" class="eq-inp" value="-1" step="1"><span class="eq-sym-y">y</span><span class="eq-sym">=</span><input type="number" id="eqSC2" class="eq-inp" value="5" step="1"></div>
+              </div>
+              <button class="eq-go-btn" id="eqGoBtn">Start Solving ▶</button>
+            </div>
+            <div id="eqSrcExercises" class="eq-src-panel" style="display:none"><div class="ex-diff-row"><button class="ex-diff-btn active" data-diff="easy">Easy</button><button class="ex-diff-btn" data-diff="medium">Medium</button><button class="ex-diff-btn" data-diff="hard">Hard</button></div><div class="ex-list" id="exList"></div></div>
+            <div id="eqSrcCsv" class="eq-src-panel" style="display:none"><label class="csv-label" for="csvFile">📁 Upload CSV <span id="csvFormatHint">(a,b,c,d per row)</span></label><input type="file" id="csvFile" accept=".csv,.txt" style="display:none"><div class="ex-list" id="csvList"></div></div>
+            <div id="eqOpArea" style="display:none">
+              <div class="eq-op-box">
+                <div class="eq-op-title">Apply to BOTH sides<span id="eqOpWhichEq"></span>:</div>
+                <div class="eq-op-row"><select id="eqOpType" class="eq-sel"><option value="add">Add</option><option value="subtract">Subtract</option><option value="multiply">Multiply by</option><option value="divide">Divide by</option></select><input type="number" id="eqOpValue" class="eq-inp-sm" value="1" step="1"><select id="eqOpWhat" class="eq-sel"><option value="num">(number)</option><option value="x">× x</option></select><button class="eq-apply-btn" id="eqApplyBtn">Apply ⚡</button></div>
+                <div id="eqSimulOps" style="display:none">
+                  <div class="eq-op-row" style="margin-top:8px"><span class="eq-op-title" style="margin:0">Target:</span><select id="eqTargetEq" class="eq-sel"><option value="1">Equation 1</option><option value="2">Equation 2</option></select></div>
+                  <div class="eq-combine-section">
+                    <div class="eq-op-title" style="margin-top:10px">Combine (elimination):</div>
+                    <div class="eq-op-row" style="margin-top:6px;gap:6px"><button class="eq-combine-btn" id="eqAddEqsBtn">Eq1 + Eq2 → Eq1</button><button class="eq-combine-btn" id="eqSubEqsBtn">Eq1 − Eq2 → Eq1</button></div>
+                    <div class="eq-op-row" style="margin-top:4px;gap:6px"><button class="eq-combine-btn" id="eqAddEqs2Btn">Eq2 + Eq1 → Eq2</button><button class="eq-combine-btn" id="eqSubEqs2Btn">Eq2 − Eq1 → Eq2</button></div>
+                  </div>
+                  <div class="eq-combine-section">
+                    <div class="eq-op-title" style="margin-top:10px">Substitution:</div>
+                    <div class="eq-sub-info" id="eqSubInfo">Solve one equation for x or y first.</div>
+                    <div class="eq-op-row" style="margin-top:6px;gap:6px"><button class="eq-sub-active-btn" id="eqSubInto2Btn" disabled>Substitute Eq1 → Eq2</button><button class="eq-sub-active-btn" id="eqSubInto1Btn" disabled>Substitute Eq2 → Eq1</button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="eq-right-col">
+            <div class="eq-ctrl-buttons" id="eqCtrlArea" style="display:none"><button class="hint-btn orange-hint" id="eqHintBtn">💡 Hint</button><button class="hint-btn hint-secondary" id="eqUndoBtn">↩ Undo</button><button class="hint-btn hint-secondary" id="eqResetBtn">↺ Reset</button></div>
+            <div class="eq-hint-box" id="eqHintBox" style="display:none"></div>
+            <div class="eq-step-log" id="eqStepLog"><div class="eq-step-placeholder">Steps will appear here as you solve…</div></div>
+            <div class="eq-solved" id="eqSolved" style="display:none">🎉 <strong>Well done!</strong><button class="hint-btn orange-hint eq-next-btn" id="eqNextBtn" style="display:none">Next →</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ QUADRATIC EQUATIONS ═══ -->
+      <div id="quadraticMode" class="explorer-main" style="display:none">
+
+        <!-- Source tabs at top -->
+        <div class="quad-top-bar">
+          <div class="eq-source-bar quad-source-bar">
+            <button class="eq-src-btn active" data-qsrc="manual" id="qSrcManual">✏️ Manual</button>
+            <button class="eq-src-btn" data-qsrc="exercises" id="qSrcExercises">📋 Exercises</button>
+            <button class="eq-src-btn" data-qsrc="csv" id="qSrcCsv">📁 CSV</button>
+          </div>
+          <!-- Manual inputs -->
+          <div id="qPanelManual" class="eq-src-panel" style="display:inline-flex;align-items:center;gap:4px;margin-left:12px">
+            <div class="quad-field"><label>a</label><input type="number" id="quadA" class="eq-inp" value="1" step="1"></div>
+            <span class="eq-sym-x">x²</span><span class="eq-sym">+</span>
+            <div class="quad-field"><label>b</label><input type="number" id="quadB" class="eq-inp" value="-3" step="1"></div>
+            <span class="eq-sym-x">x</span><span class="eq-sym">+</span>
+            <div class="quad-field"><label>c</label><input type="number" id="quadC" class="eq-inp" value="2" step="1"></div>
+            <span class="eq-sym">=</span><span class="eq-sym">0</span>
+          </div>
+          <div id="qPanelExercises" class="eq-src-panel" style="display:none">
+            <div class="ex-diff-row" style="margin:0"><button class="ex-diff-btn qd-diff active" data-qdiff="easy">Easy</button><button class="ex-diff-btn qd-diff" data-qdiff="medium">Medium</button><button class="ex-diff-btn qd-diff" data-qdiff="hard">Hard</button></div>
+          </div>
+          <div id="qPanelCsv" class="eq-src-panel" style="display:none">
+            <label class="csv-label-inline" for="qCsvFile">📁 Upload CSV (a,b,c per row)</label>
+            <input type="file" id="qCsvFile" accept=".csv,.txt" style="display:none">
+          </div>
+        </div>
+
+        <!-- Exercise list (shown when exercises/csv active) -->
+        <div class="quad-ex-strip" id="qExStrip" style="display:none">
+          <div class="ex-list ex-list-horizontal" id="qExList"></div>
+        </div>
+        <div class="quad-ex-strip" id="qCsvStrip" style="display:none">
+          <div class="ex-list ex-list-horizontal" id="qCsvList"></div>
+        </div>
+
+        <!-- KaTeX equation display -->
+        <div class="quad-katex" id="quadKatex"></div>
+
+        <!-- 50/50 split: graph left, workspace right -->
+        <div class="quad-split">
+
+          <!-- LEFT: Graph -->
+          <div class="quad-graph-half">
+            <canvas id="quadCanvas" width="600" height="500"></canvas>
+          </div>
+
+          <!-- RIGHT: Student workspace -->
+          <div class="quad-work-half">
+
+            <!-- Student's working area (always visible) -->
+            <div class="qw-section">
+              <div class="qw-title">Your Working</div>
+              <div class="qw-prompt">Identify <strong>a</strong>, <strong>b</strong>, and <strong>c</strong>, then calculate the discriminant:</div>
+              <div class="qw-input-row">
+                <label>a =</label><input type="number" id="qStudA" class="qw-input" placeholder="?">
+                <label>b =</label><input type="number" id="qStudB" class="qw-input" placeholder="?">
+                <label>c =</label><input type="number" id="qStudC" class="qw-input" placeholder="?">
+              </div>
+              <div class="qw-prompt" style="margin-top:8px">Discriminant: <strong>b² − 4ac</strong> =</div>
+              <div class="qw-input-row">
+                <input type="number" id="qStudDisc" class="qw-input qw-input-wide" placeholder="?">
+                <button class="qw-check-btn" id="qCheckDiscBtn">Check ✓</button>
+              </div>
+              <div class="qw-feedback" id="qDiscFeedback"></div>
+
+              <div class="qw-prompt" style="margin-top:8px">Solutions: <strong>x =</strong></div>
+              <div class="qw-input-row">
+                <label>x₁ =</label><input type="number" id="qStudX1" class="qw-input" placeholder="?" step="any">
+                <label>x₂ =</label><input type="number" id="qStudX2" class="qw-input" placeholder="?" step="any">
+                <button class="qw-check-btn" id="qCheckSolBtn">Check ✓</button>
+              </div>
+              <div class="qw-feedback" id="qSolFeedback"></div>
+            </div>
+
+            <!-- Hint button -->
+            <div class="qw-buttons">
+              <button class="hint-btn quad-hint-btn" id="qHintBtn">💡 Hint</button>
+              <button class="hint-btn quad-reveal-btn" id="qRevealBtn">👁 Show Full Solution</button>
+            </div>
+            <div class="qw-hint-box" id="qHintBox" style="display:none"></div>
+
+            <!-- Full solution (hidden until revealed) -->
+            <div class="qw-solution" id="qSolutionArea" style="display:none">
+              <div class="qw-title">Full Solution</div>
+              <div class="quad-steps" id="quadSteps"></div>
+              <div class="quad-discriminant" id="quadDiscriminant"></div>
+              <div class="quad-solutions" id="quadSolutions"></div>
+              <div class="qw-title" style="margin-top:10px">Why ± ?</div>
+              <div class="quad-explanation" id="quadExplanation"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ SOHCAHTOA ═══ -->
+      <div id="sohcahtoaMode" class="explorer-main" style="display:none">
+
+        <!-- Top bar: source + problem setup -->
+        <div class="soh-top-bar">
+          <div class="eq-source-bar soh-source-bar">
+            <button class="eq-src-btn active" data-ssrc="manual" id="sSrcManual">✏️ Manual</button>
+            <button class="eq-src-btn" data-ssrc="exercises" id="sSrcExercises">📋 Exercises</button>
+            <button class="eq-src-btn" data-ssrc="csv" id="sSrcCsv">📁 CSV</button>
+          </div>
+          <!-- Problem type -->
+          <div class="soh-type-toggle">
+            <button class="soh-type-btn active" data-stype="findSide" id="sTypeSide">Find a side</button>
+            <button class="soh-type-btn" data-stype="findAngle" id="sTypeAngle">Find an angle</button>
+          </div>
+        </div>
+
+        <!-- Exercise strip -->
+        <div class="soh-ex-strip" id="sExStrip" style="display:none">
+          <div class="ex-list ex-list-horizontal" id="sExList"></div>
+        </div>
+        <div class="soh-ex-strip" id="sCsvStrip" style="display:none">
+          <div class="ex-list ex-list-horizontal" id="sCsvList"></div>
+        </div>
+
+        <!-- CSV upload (hidden file input) -->
+        <div id="sPanelCsv" style="display:none">
+          <label class="csv-label-inline" for="sCsvFile" style="margin:6px 20px;display:inline-block">📁 Upload CSV (angle,knownSide,knownVal,findSide)</label>
+          <input type="file" id="sCsvFile" accept=".csv,.txt" style="display:none">
+        </div>
+
+        <!-- 50/50 split -->
+        <div class="soh-split">
+
+          <!-- LEFT: Interactive triangle -->
+          <div class="soh-graph-half">
+            <canvas id="sohCanvas" width="600" height="500"></canvas>
+            <!-- Side legend -->
+            <div class="soh-legend">
+              <span class="soh-leg-item" style="color:#ef4444">■ Opposite (O)</span>
+              <span class="soh-leg-item" style="color:#3b82f6">■ Adjacent (A)</span>
+              <span class="soh-leg-item" style="color:#10b981">■ Hypotenuse (H)</span>
+            </div>
+          </div>
+
+          <!-- RIGHT: Student workspace -->
+          <div class="soh-work-half">
+
+            <!-- Problem setup (manual) -->
+            <div class="qw-section" id="sohManualPanel">
+              <div class="qw-title" style="color:#f43f5e">Problem Setup</div>
+              <div class="soh-setup-grid">
+                <div class="soh-field"><label>Angle (θ)</label><input type="number" id="sohAngle" class="qw-input" value="35" min="1" max="89" step="1"><span class="soh-unit">°</span></div>
+                <div class="soh-field"><label>Known side</label>
+                  <select id="sohKnownSide" class="soh-select">
+                    <option value="hyp">Hypotenuse</option>
+                    <option value="opp">Opposite</option>
+                    <option value="adj">Adjacent</option>
+                  </select>
+                </div>
+                <div class="soh-field"><label>Known value</label><input type="number" id="sohKnownVal" class="qw-input" value="10" step="any"></div>
+                <div class="soh-field"><label id="sohFindLabel">Find</label>
+                  <select id="sohFindSide" class="soh-select">
+                    <option value="opp">Opposite</option>
+                    <option value="adj">Adjacent</option>
+                  </select>
+                </div>
+              </div>
+              <button class="eq-go-btn" id="sohGoBtn" style="margin-top:8px;background:linear-gradient(135deg,#f43f5e,#e11d48)">Start ▶</button>
+            </div>
+
+            <!-- Step 1: Identify sides -->
+            <div id="sohSolveArea" style="display:none">
+              <div class="qw-section">
+                <div class="qw-title" style="color:#f43f5e">Step 1: Label the sides</div>
+                <div class="qw-prompt">Relative to the angle θ, which side is which?</div>
+                <div class="soh-label-row">
+                  <div class="soh-label-item">
+                    <span style="color:#ef4444;font-weight:700">Opposite:</span>
+                    <select id="sohLabelOpp" class="soh-select-sm"><option value="">Choose…</option><option value="a">Side a</option><option value="b">Side b</option><option value="c">Side c (hyp)</option></select>
+                  </div>
+                  <div class="soh-label-item">
+                    <span style="color:#3b82f6;font-weight:700">Adjacent:</span>
+                    <select id="sohLabelAdj" class="soh-select-sm"><option value="">Choose…</option><option value="a">Side a</option><option value="b">Side b</option><option value="c">Side c (hyp)</option></select>
+                  </div>
+                  <div class="soh-label-item">
+                    <span style="color:#10b981;font-weight:700">Hypotenuse:</span>
+                    <select id="sohLabelHyp" class="soh-select-sm"><option value="">Choose…</option><option value="a">Side a</option><option value="b">Side b</option><option value="c">Side c (hyp)</option></select>
+                  </div>
+                </div>
+                <button class="qw-check-btn" id="sohCheckLabels" style="margin-top:6px">Check Labels ✓</button>
+                <div class="qw-feedback" id="sohLabelFeedback"></div>
+              </div>
+
+              <!-- Step 2: Choose ratio -->
+              <div class="qw-section">
+                <div class="qw-title" style="color:#f43f5e">Step 2: Choose the ratio</div>
+                <div class="qw-prompt">Which trig ratio uses the sides you have and need?</div>
+                <div class="soh-ratio-btns">
+                  <button class="soh-ratio-btn" data-ratio="sin" id="sohPickSin">
+                    <strong>SOH</strong><br><span>sin = O / H</span>
+                  </button>
+                  <button class="soh-ratio-btn" data-ratio="cos" id="sohPickCos">
+                    <strong>CAH</strong><br><span>cos = A / H</span>
+                  </button>
+                  <button class="soh-ratio-btn" data-ratio="tan" id="sohPickTan">
+                    <strong>TOA</strong><br><span>tan = O / A</span>
+                  </button>
+                </div>
+                <div class="qw-feedback" id="sohRatioFeedback"></div>
+              </div>
+
+              <!-- Step 3: Build & solve -->
+              <div class="qw-section">
+                <div class="qw-title" style="color:#f43f5e">Step 3: Solve</div>
+                <div class="soh-formula-display" id="sohFormulaDisplay"></div>
+                <div class="qw-prompt" style="margin-top:8px" id="sohSolvePrompt">Enter your answer:</div>
+                <div class="qw-input-row">
+                  <label id="sohAnswerLabel">? =</label>
+                  <input type="number" id="sohAnswer" class="qw-input qw-input-wide" placeholder="?" step="any">
+                  <button class="qw-check-btn" id="sohCheckAnswer">Check ✓</button>
+                </div>
+                <div class="qw-feedback" id="sohAnswerFeedback"></div>
+              </div>
+
+              <!-- Hint + reveal -->
+              <div class="qw-buttons">
+                <button class="hint-btn" id="sohHintBtn" style="background:linear-gradient(135deg,#f43f5e,#e11d48);color:#fff">💡 Hint</button>
+                <button class="hint-btn hint-secondary" id="sohRevealBtn">👁 Show Solution</button>
+              </div>
+              <div class="qw-hint-box" id="sohHintBox" style="display:none"></div>
+              <div class="qw-solution" id="sohSolutionArea" style="display:none"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ FRACTIONS ═══ -->
+      <div id="fractionsMode" class="explorer-main" style="display:none">
+
+        <!-- Top bar: source tabs -->
+        <div class="soh-top-bar">
+          <div class="eq-source-bar frac-source-bar">
+            <button class="eq-src-btn active" data-fsrc="manual" id="fSrcManual">✏️ Manual</button>
+            <button class="eq-src-btn" data-fsrc="exercises" id="fSrcExercises">📋 Exercises</button>
+            <button class="eq-src-btn" data-fsrc="csv" id="fSrcCsv">📁 CSV</button>
+          </div>
+          <div id="fPanelExercises" style="display:none;margin-left:10px">
+            <div class="ex-diff-row" style="margin:0">
+              <button class="ex-diff-btn frac-diff active" data-fdiff="easy">Easy</button>
+              <button class="ex-diff-btn frac-diff" data-fdiff="medium">Medium</button>
+              <button class="ex-diff-btn frac-diff" data-fdiff="hard">Hard</button>
+            </div>
+          </div>
+          <div id="fPanelCsv" style="display:none;margin-left:10px">
+            <label class="csv-label-inline" for="fCsvFile">📁 Upload CSV</label>
+            <input type="file" id="fCsvFile" accept=".csv,.txt" style="display:none">
+          </div>
+        </div>
+
+        <!-- Exercise strip -->
+        <div class="quad-ex-strip" id="fExStrip" style="display:none">
+          <div class="ex-list ex-list-horizontal" id="fExList"></div>
+        </div>
+
+        <!-- KaTeX display -->
+        <div class="frac-katex" id="fracKatex"></div>
+
+        <div class="frac-split">
+
+          <!-- LEFT: Visual bars -->
+          <div class="frac-visual-half">
+            <canvas id="fracCanvas" width="600" height="500"></canvas>
+          </div>
+
+          <!-- RIGHT: Input + working -->
+          <div class="frac-work-half">
+
+            <div class="qw-section" id="fracManualSection">
+              <div class="qw-title" style="color:#f472b6">Fraction Arithmetic</div>
+
+              <!-- Dynamic fraction chain -->
+              <div class="frac-chain" id="fracChain">
+                <!-- Built dynamically by JS -->
+              </div>
+
+              <div class="frac-chain-btns">
+                <button class="frac-add-btn" id="fracAddBtn">+ Add fraction</button>
+                <button class="frac-remove-btn" id="fracRemoveBtn" style="display:none">− Remove last</button>
+              </div>
+
+              <!-- Answer -->
+              <div class="frac-answer-row">
+                <span class="frac-eq-sign">=</span>
+                <div class="frac-box frac-answer-box">
+                  <input type="number" id="fracAnsN" class="frac-inp frac-ans-inp" placeholder="?">
+                  <div class="frac-line" style="background:#34d399"></div>
+                  <input type="number" id="fracAnsD" class="frac-inp frac-ans-inp" placeholder="?">
+                </div>
+              </div>
+
+              <div class="frac-btn-row">
+                <button class="qw-check-btn" id="fracCheckBtn" style="background:#f472b6">Check ✓</button>
+                <button class="hint-btn" id="fracHintBtn" style="background:linear-gradient(135deg,#f472b6,#ec4899);color:#fff">💡 Hint</button>
+                <button class="hint-btn hint-secondary" id="fracRevealBtn">👁 Solution</button>
+              </div>
+              <div class="qw-feedback" id="fracFeedback"></div>
+            </div>
+
+            <!-- Hint box -->
+            <div class="qw-hint-box" id="fracHintBox" style="display:none"></div>
+
+            <!-- Step-by-step solution (hidden until reveal) -->
+            <div class="frac-solution" id="fracSolution" style="display:none">
+              <div class="qw-title" style="color:#f472b6">Step-by-step Solution</div>
+              <div class="frac-steps" id="fracSteps"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right panel (builder mode only) -->
+    <div class="output-panel" id="outputPanel">
+      <div class="panel-section">
+        <div class="section-label"><span class="dot accent-dot"></span> Formatted Equation</div>
+        <div class="output-box" id="katexOutput"><span class="ph">Build an equation with blocks…</span></div>
+      </div>
+      <div class="panel-section">
+        <div class="section-label"><span class="dot success-dot"></span> Result</div>
+        <div class="slider-row"><label>x =</label><input type="range" id="xSlider" min="-10" max="10" step="0.1" value="1"><span class="x-val" id="xValueDisplay">1</span></div>
+        <div class="result-display" id="resultOutput"><span class="ph">Click evaluate</span></div>
+        <button class="eval-btn" id="evalBtn">Evaluate</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/equation.js"></script>
+  <script src="js/quadratic.js"></script>
+  <script src="js/sohcahtoa.js"></script>
+  <script src="js/fractions.js"></script>
+</body>
+</html>
