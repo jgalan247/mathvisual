@@ -103,6 +103,13 @@ function initSOH(){
       renderSCsvList();
     };r.readAsText(f)};
 
+  // Render explanation equations
+  try{
+    katex.render("\\sin(\\theta) = \\frac{\\text{Opposite}}{\\text{Hypotenuse}}", document.getElementById("sohEqSinKatex"), {displayMode:true,throwOnError:false});
+    katex.render("\\cos(\\theta) = \\frac{\\text{Adjacent}}{\\text{Hypotenuse}}", document.getElementById("sohEqCosKatex"), {displayMode:true,throwOnError:false});
+    katex.render("\\tan(\\theta) = \\frac{\\text{Opposite}}{\\text{Adjacent}}", document.getElementById("sohEqTanKatex"), {displayMode:true,throwOnError:false});
+  }catch(e){}
+
   renderSExList("easy");
   updateSOH();
 }
@@ -151,7 +158,23 @@ function startSOH(){
     document.getElementById("sohSolvePrompt").textContent="Calculate the missing side:";
   }
 
+  highlightActiveRatio();
   updateSOH();
+}
+
+function highlightActiveRatio(){
+  var r=getCorrectRatio();
+  var ids={sin:"sohEqSOH",cos:"sohEqCAH",tan:"sohEqTOA"};
+  for(var k in ids){
+    var el=document.getElementById(ids[k]);
+    if(k===r){
+      el.style.outline="2px solid "+(k==="sin"?"#ef4444":k==="cos"?"#3b82f6":"#f59e0b");
+      el.style.outlineOffset="2px";
+    } else {
+      el.style.outline="none";
+      el.style.outlineOffset="0";
+    }
+  }
 }
 
 function loadSOHExercise(ex){
@@ -332,6 +355,7 @@ function pickRatio(ratio){
     btn.classList.add("selected","correct");
     fb.innerHTML='<span style="color:#34d399">✓ Correct! Use '+ratio.toUpperCase()+'</span>';
     fb.className="qw-feedback correct";
+    highlightActiveRatio();
     showFormula(ratio);
   } else {
     btn.classList.add("selected","incorrect");
